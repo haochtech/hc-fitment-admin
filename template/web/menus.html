@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+    <link href="{MODULE_URL}template/public/css/iconfont.css?v=20190125" rel="stylesheet">
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <input type="hidden" name="token" value="{$_W['token']}" />
+                <div class="layui-tab layui-tab-brief" lay-filter="tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">{$_W['slwl']['lang']['menus_li_title']}</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 底部菜单配置 -->
+                        <!-- 启用状态 -->
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['menus_status']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="enabled" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $smeta['enabled']==1 }checked{/if}>
+                                    <input type="radio" name="enabled" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $smeta['enabled']==0 }checked{/if}>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit="" lay-filter="menus">{$_W['slwl']['lang']['save']}</button>
+                                    <button type="button" class="layui-btn layui-btn-danger" id="btn-img-empty">{$_W['slwl']['lang']['all_delete']}</button>
+                                    <span style="margin-left: 10px;">{$_W['slwl']['lang']['menus_max_bottom_menu_tips']}</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 0;">
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-home">{$_W['slwl']['lang']['menus_btn_default']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-pic">{$_W['slwl']['lang']['menus_btn_pic']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-my">{$_W['slwl']['lang']['menus_btn_my']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-tel">{$_W['slwl']['lang']['menus_btn_tel']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-location">{$_W['slwl']['lang']['menus_btn_location']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-guestbook">{$_W['slwl']['lang']['menus_btn_guestbook']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-reserve">{$_W['slwl']['lang']['menus_btn_reserve']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-site">{$_W['slwl']['lang']['menus_btn_site']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-shop">{$_W['slwl']['lang']['menus_btn_store']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-products">{$_W['slwl']['lang']['menus_btn_product']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-panorama">{$_W['slwl']['lang']['menus_btn_panorama']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-out-link-1">{$_W['slwl']['lang']['menus_btn_custom_1']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary" id="insert-out-link-2">{$_W['slwl']['lang']['menus_btn_custom_2']}</button>
+                            </div>
+
+                            <div style="height: 16px;"></div>
+
+                            <div class="photo-list">
+                                {loop $smeta['items'] $index $item}
+                                <blockquote class="layui-elem-quote photo-item">
+                                    <input type="hidden" class="input-icon" name="options[icon][{$index}]" value="{$item['icon']}">
+                                    <div class="layui-form-item box-item">
+                                        <div class="box-img"><i class="icon iconfont icon-fnav {$item['icon']}"></i></div>
+                                        <div class="box-group mb">
+                                            <label class="layui-form-label">标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="options[title][{$index}]" placeholder="请输入" class="layui-input input-filename" value="{$item['title']}">
+                                            </div>
+                                        </div>
+                                        <div class="box-group input-link">
+                                            <label class="layui-form-label">链接</label>
+                                            <div class="layui-input-block">
+                                                {php echo slwl_tpl_form_show_link('options[page_url]['.$index.']', $item['page_url']);}
+                                            </div>
+                                        </div>
+                                        <div class="layui-input-inline box-btn">
+                                            <button type="button" class="layui-btn layui-btn-primary btn-move-top">置顶</button>
+                                            <button type="button" class="layui-btn layui-btn-primary btn-move-up">上移</button>
+                                            <button type="button" class="layui-btn layui-btn-primary btn-move-down">下移</button>
+                                            <button type="button" class="layui-btn layui-btn-primary btn-move-bottom">置底</button>
+                                            <button type="button" class="layui-btn layui-btn-danger btn-delete">删除</button>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                                {/loop}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="photo-clone" style="display: none;">
+                <blockquote class="layui-elem-quote photo-item photo-item-common">
+                    <input type="hidden" class="input-icon" name="options[icon][]">
+                    <div class="layui-form-item box-item">
+                        <div class="box-img"><i class="icon iconfont icon-fnav"></i></div>
+                        <div class="box-group mb">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="options[title][]" placeholder="请输入" class="layui-input input-filename">
+                            </div>
+                        </div>
+                        <div class="box-group input-link">
+                            <label class="layui-form-label">链接</label>
+                            <div class="layui-input-block">
+                                {php echo slwl_tpl_form_show_link('page_url');}
+                            </div>
+                        </div>
+                        <div class="layui-input-inline box-btn">
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-top">置顶</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-up">上移</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-down">下移</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-bottom">置底</button>
+                            <button type="button" class="layui-btn layui-btn-danger btn-delete">删除</button>
+                        </div>
+                    </div>
+                </blockquote>
+
+            </div>
+
+            <script type="text/javascript">
+                var sub_num = 9000;
+
+                $(function () {
+                    function checkItemNum() {
+                        var $item_num = $('.photo-list').children('.photo-item').length;
+
+                        if ($item_num >= 5) {
+                            layer.msg('只支持最多五个' , {
+                                shift: 6,
+                            });
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+
+                    // 添加首页
+                    $(document).on('click', '#insert-home', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-home');
+                            $obj.find('.icon-fnav').addClass('icon-home');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('首页');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('default');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加图库
+                    $(document).on('click', '#insert-pic', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-pic');
+                            $obj.find('.icon-fnav').addClass('icon-pic');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('图库');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('pic');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加我的
+                    $(document).on('click', '#insert-my', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-my');
+                            $obj.find('.icon-fnav').addClass('icon-my');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('我的');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('ucenter');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加一键拨号
+                    $(document).on('click', '#insert-tel', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-tel');
+                            $obj.find('.icon-fnav').addClass('icon-tel');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('拨号');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('tel');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加一键导航
+                    $(document).on('click', '#insert-location', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-position');
+                            $obj.find('.icon-fnav').addClass('icon-position');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('地址');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('location');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加留言
+                    $(document).on('click', '#insert-guestbook', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-guestbook');
+                            $obj.find('.icon-fnav').addClass('icon-guestbook');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('留言');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('/pages/guestbook/guestbook');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加在线预约
+                    $(document).on('click', '#insert-reserve', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-reserve');
+                            $obj.find('.icon-fnav').addClass('icon-reserve');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('预约');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('/pages/reserve/reserve');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加-工地直播
+                    $(document).on('click', '#insert-site', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-live');
+                            $obj.find('.icon-fnav').addClass('icon-live');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('工地');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('site');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加-商城
+                    $(document).on('click', '#insert-shop', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-shop');
+                            $obj.find('.icon-fnav').addClass('icon-shop');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('商城');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('shop');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加-产品
+                    $(document).on('click', '#insert-products', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-products');
+                            $obj.find('.icon-fnav').addClass('icon-products');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('产品');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('products');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加-全景
+                    $(document).on('click', '#insert-panorama', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-panorama');
+                            $obj.find('.icon-fnav').addClass('icon-panorama');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('全景');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']').val('panorama');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加自定义1
+                    $(document).on('click', '#insert-out-link-1', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-list');
+                            $obj.find('.icon-fnav').addClass('icon-list');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('自定义1');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+                    // 添加自定义2
+                    $(document).on('click', '#insert-out-link-2', function () {
+                        if (checkItemNum()) {
+                            $obj = $('.photo-clone .photo-item-common').clone(true);
+                            $obj.find('.input-icon').attr('name', 'options[icon][' + sub_num + ']').val('icon-list2');
+                            $obj.find('.icon-fnav').addClass('icon-list2');
+                            $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val('自定义2');
+                            $obj.find('.input-link input[name="page_url"]').attr('name', 'options[page_url][' + sub_num + ']');
+                            $('.photo-list').append($obj);
+                            sub_num += 1;
+                        }
+                    });
+
+
+                    // 清空
+                    $(document).on('click', '#btn-img-empty', function () {
+                        layer.confirm('确定要全部删除吗？', {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"]
+                        }, function(i){
+                            layer.close(i);
+                        }, function(i) {
+                            $('.photo-list').empty();
+                        });
+                    });
+
+
+                    // 置顶
+                    $(document).on('click', '.btn-move-top', function () {
+                        var $obj = $(this).closest('.photo-item');
+                        var $box = $(this).closest('.photo-list');
+
+                        if ($obj.prev().html != '') {
+                            $obj.prependTo($box);
+                        }
+                    });
+
+                    // 上移
+                    $(document).on('click', '.btn-move-up', function () {
+                        var $obj = $(this).closest('.photo-item');
+
+                        if ($obj.prev().html != '') {
+                            $obj.insertBefore($obj.prev());
+                        }
+                    });
+
+                    // 下移
+                    $(document).on('click', '.btn-move-down', function () {
+                        var $obj = $(this).closest('.photo-item');
+
+                        if ($obj.next().html != '') {
+                            $obj.insertAfter($obj.next());
+                        }
+                    });
+
+                    // 置底
+                    $(document).on('click', '.btn-move-bottom', function () {
+                        var $obj = $(this).closest('.photo-item');
+                        var $box = $(this).closest('.photo-list');
+
+                        if ($obj.prev().html != '') {
+                            $obj.appendTo($box);
+                        }
+                    });
+
+                    // 删除
+                    $(document).on('click', '.btn-delete', function () {
+                        var $obj = $(this);
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"]
+                        }, function(i){
+                            layer.close(i);
+                        }, function(i) {
+                            $obj.closest('.photo-item').remove();
+                        });
+                    });
+                });
+            </script>
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(menus)', function(data){
+                        let url = "{php echo webUrl('menus')}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('menus')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+	<style type="text/css">
+		.order-body { overflow-y: auto; }
+	</style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li {if $operation == 'display' && $status == ''} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order'])}">{$_W['slwl']['lang']['store_order_title_all']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '1'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'1'])}">{$_W['slwl']['lang']['store_order_title_1']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '2'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'2'])}">{$_W['slwl']['lang']['store_order_title_2']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '3'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'3'])}">{$_W['slwl']['lang']['store_order_title_3']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '4'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'4'])}">{$_W['slwl']['lang']['store_order_title_4']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '5'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'5'])}">{$_W['slwl']['lang']['store_order_title_5']}</a>
+					</li>
+					<li {if $operation == 'display' && $status == '0'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/order','op'=>'display','status'=>'0'])}">{$_W['slwl']['lang']['store_order_title_0']}</a>
+					</li>
+					{if $order['id'] && $operation == 'detail'}
+						<li class="layui-this"><a href="javascript:;">{$_W['slwl']['lang']['store_order_show']}</a></li>
+					{/if}
+				</ul>
+			</div>
+
+		{if $operation == 'display'}
+			<div class="box-tools">
+				<div class="box-search">
+					<form action="{php echo webUrl('',['do'=>'store/order'])}" method="post">
+						<div class="layui-input-inline">
+							<input type="text" name="keyword" value="{$keyword}" class="layui-input"
+								placeholder="{$_W['slwl']['lang']['title']}">
+						</div>
+						<div class="layui-input-inline">
+							<button class="layui-btn" lay-submit lay-filter="">{$_W['slwl']['lang']['search']}</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="layui-form">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>{$_W['slwl']['lang']['store_order_sn']}</th>
+							<th>{$_W['slwl']['lang']['name']}</th>
+							<th>{$_W['slwl']['lang']['tel']}</th>
+							<th>{$_W['slwl']['lang']['store_order_price']}</th>
+							<th>{$_W['slwl']['lang']['status']}</th>
+							<th>{$_W['slwl']['lang']['time']}</th>
+							<th>{$_W['slwl']['lang']['operation']}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 0=取消，1=待付款，2=待发货，3=待收货，4=已完成，5=退款 -->
+						<?php $this_orderstatus = array(
+							'0'=>$_W['slwl']['lang']['store_order_title_0'],
+							'1'=>$_W['slwl']['lang']['store_order_title_1'],
+							'2'=>$_W['slwl']['lang']['store_order_title_2'],
+							'3'=>$_W['slwl']['lang']['store_order_title_3'],
+							'4'=>$_W['slwl']['lang']['store_order_title_4'],
+							'5'=>$_W['slwl']['lang']['store_order_title_5']
+						); ?>
+						<?php $this_paytype = array(
+							'0'=>$_W['slwl']['lang']['store_order_not_pay'],
+							'1'=>$_W['slwl']['lang']['store_order_paid']
+						); ?>
+						<?php $this_statuses = array(
+							'0'=>$_W['slwl']['lang']['disabled'],
+							'1'=>$_W['slwl']['lang']['enabled']
+						); ?>
+						{loop $list $item}
+						<tr>
+							<td>{$item['ordersn']}</td>
+							<td>{$item['address']['realname']}</td>
+							<td>{$item['address']['mobile']}</td>
+							<td>{$item['price_format']}</td>
+							<td class="box-status">{$this_orderstatus[$item['status']]}</td>
+							<td>{$item['addtime']}</td>
+							<td style="text-align:left;">
+								<button class="layui-btn layui-btn-primary layui-btn-sm btn-proerty" data-status="2" data-id="{$item['id']}"
+									data-title="{$_W['slwl']['lang']['store_order_set_2']}">{$_W['slwl']['lang']['store_order_set_2']}</button>
+								<button class="layui-btn layui-btn-primary layui-btn-sm btn-proerty" data-status="3" data-id="{$item['id']}"
+									data-title="{$_W['slwl']['lang']['store_order_set_3']}">{$_W['slwl']['lang']['store_order_set_3']}</button>
+								<button class="layui-btn layui-btn-primary layui-btn-sm btn-proerty" data-status="4" data-id="{$item['id']}"
+									data-title="{$_W['slwl']['lang']['store_order_set_4']}">{$_W['slwl']['lang']['store_order_set_4']}</button>
+								<a href="{php echo webUrl('',['do'=>'store/order','op'=>'detail', 'id'=>$item['id']])}"
+									class="layui-btn layui-btn-sm"
+									title="{$_W['slwl']['lang']['store_order_show']}">{$_W['slwl']['lang']['store_order_show']}</a>
+								<a href="javascript:;" class="layui-btn layui-btn-danger btn-del layui-btn-sm" data-id="{$item['id']}"
+									title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+							</td>
+						</tr>
+						{/loop}
+					</tbody>
+				</table>
+				<div class="pager">
+					{$pager}
+				</div>
+			</div>
+
+			<script>
+				layui.use(['laypage', 'layer'], function(){
+					var laypage = layui.laypage;
+					var layer = layui.layer;
+
+					// 分页
+					laypage.render({
+						elem: $('.pager')
+						,limit: '{php echo $psize; }'
+						,count: '{php echo $total; }'
+						,theme: '#1E9FFF'
+						,curr:  '{php echo $pindex; }'
+						,hash: '{php echo $pindex; }'
+						,jump: function (obj, first) {
+							if (first != true) {
+								var currentPage = obj.curr; //获取点击的页码
+								window.location.href = "{php echo webUrl('',['do'=>'store/order'])}&page=" + currentPage;
+							}
+						}
+					});
+
+					// 删除
+					$(document).on('click', '.btn-del', function () {
+						$obj = $(this);
+						$del_id = $obj.data('id');
+						layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+							offset: '20%',
+							btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+							scrollbar: false,
+							closeBtn: 0,
+						}, function (i) {
+						   layer.close(i);
+						}, function (i) {
+							let $url = "{php echo webUrl('',['do'=>'store/order','op'=>'delete'])}";
+
+							$.ajax({
+								type: "POST",
+								url: $url,
+								dataType: 'json',
+								data: {
+									id: $del_id
+								},
+								success: function (rs) {
+									console.log(rs);
+									if (rs.code == '0') {
+										layer.msg('删除成功！', {
+											time: 500
+										},
+										function () {
+											$obj.closest('tr').fadeOut(200, function () {
+												$obj.remove();
+											});
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+										});
+										$obj.removeClass('lock');
+									}
+								},
+								error: function () {
+									layer.msg('保存过程发生错误，请与管理员联系', {
+										offset: '20%',
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						});
+					});
+
+					// 设置属性
+					$(document).on('click', '.btn-proerty', function () {
+						$obj = $(this);
+						$status = $obj.data('status');
+						$id = $obj.data('id');
+						$title = $obj.data('title');
+
+						let $url = "{php echo webUrl('',['do'=>'store/order','op'=>'order_status'])}";
+
+						$.ajax({
+							type: "POST",
+							url: $url,
+							dataType: 'json',
+							data: {
+								status: $status,
+								id: $id,
+							},
+							success: function (rs) {
+								console.log(rs);
+								if (rs.errno == '0') {
+									layer.msg('设置成功！', {
+										time: 500
+									},
+									function () {
+										$obj.closest('tr').find('.box-status').text($title);
+									});
+								} else {
+									layer.msg(rs.msg, {
+										offset: '20%',
+									});
+								}
+							},
+							error: function () {
+								layer.msg('保存过程发生错误，请与管理员联系', {
+									offset: '20%',
+								});
+							}
+						});
+					});
+				});
+
+
+				$(function () {
+					$('.pager').show();
+				});
+			</script>
+
+
+		{elseif $operation == 'detail'}
+			<div class="order-body">
+				<!-- 订单信息 -->
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+					<legend>{$_W['slwl']['lang']['store_order_title_info']}</legend>
+				</fieldset>
+				<!-- 订单总价 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_order_price']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['price_format']} {$_W['slwl']['lang']['yuan']}</div>
+					</div>
+				</div>
+				<!-- 订单优惠券 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_order_coupon']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['coupon']['title']}</div>
+					</div>
+				</div>
+				<!-- <div class="layui-form-item">
+					<label class="layui-form-label">快递单号</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['expresssn']}</div>
+					</div>
+				</div> -->
+				<div class="layui-form-item">
+					<!-- 状态，0=取消，1=待付款，2=待发货，3=待收货，4=已完成，5=退款 -->
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_order_status']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">
+							{if $order['status'] == 0}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_0']}</span>{/if}
+							{if $order['status'] == 1}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_1']}</span>{/if}
+							{if $order['status'] == 2}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_2']}</span>{/if}
+							{if $order['status'] == 3}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_3']}</span>{/if}
+							{if $order['status'] == 4}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_4']}</span>{/if}
+							{if $order['status'] == 5}<span class="label label-info box-order-status">{$_W['slwl']['lang']['store_order_title_5']}</span>{/if}
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_order_time']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['addtime']}</div>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_order_operation']}</label>
+					<div class="layui-input-block">
+						<div style='padding-top: 4px;'>
+							<button class="layui-btn layui-btn-primary layui-btn-sm btn-proerty" data-status="5"
+								data-id="{$order['id']}"
+								data-title="{$_W['slwl']['lang']['store_order_set_5']}">{$_W['slwl']['lang']['store_order_set_5']}</button>
+							<button class="layui-btn layui-btn-primary layui-btn-sm btn-proerty" data-status="0"
+								data-id="{$order['id']}"
+								data-title="{$_W['slwl']['lang']['store_order_set_0']}">{$_W['slwl']['lang']['store_order_set_0']}</button>
+						</div>
+					</div>
+				</div>
+				<form class="layui-form" action="" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="id" value="{$order['id']}" />
+					<div class="layui-form-item">
+						<label class="layui-form-label">{$_W['slwl']['lang']['store_order_mark']}</label>
+						<div class="layui-input-block">
+							<textarea placeholder="{$_W['slwl']['lang']['store_order_mark']}" class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="store_goods">{$_W['slwl']['lang']['submit']}</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</form>
+
+
+				<!-- 用户信息 -->
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+					<legend>{$_W['slwl']['lang']['store_order_title_user']}</legend>
+				</fieldset>
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['name']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['address']['realname']}</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['tel']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$order['address']['mobile']}</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['address']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">
+							{$order['address']['province']}
+							{$order['address']['city']}
+							{$order['address']['area']}
+							{$order['address']['address']}
+						</div>
+					</div>
+				</div>
+
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+					<legend>{$_W['slwl']['lang']['store_order_title_user']}</legend>
+				</fieldset>
+				<div class="layui-form-item">
+					<table class="layui-table">
+						<colgroup>
+							<col width="50">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>{$_W['slwl']['lang']['title']}</th>
+								<th>{$_W['slwl']['lang']['store_good_post_4']}</th>
+								<th>{$_W['slwl']['lang']['store_good_sn']}</th>
+								<th>{$_W['slwl']['lang']['store_good_code']}</th>
+								<th>{$_W['slwl']['lang']['store_good_price_sale']} / {$_W['slwl']['lang']['store_good_price_market']}</th>
+								<th>{$_W['slwl']['lang']['money']}</th>
+								<th>{$_W['slwl']['lang']['count']}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop $list_goods $item}
+							<tr>
+								<td>{$item['id']}</td>
+								<td>{$item['title']}</td>
+								<td></td>
+								<td>{$item['goodsn']}</td>
+								<td>{$item['barcode']}</td>
+								<td>{$item['price_format']}元 / {$item['original_price_format']}元</td>
+								<td>{$item['price_format']}</td>
+								<td>{$item['number']}</td>
+							</tr>
+							{/loop}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="layui-form-item">
+					<div class="layui-input-block"></div>
+				</div>
+			</div>
+			<script>
+				layui.use(['layer'], function(){
+					var layer = layui.layer;
+
+					// 设置属性
+					$(document).on('click', '.btn-proerty', function () {
+						$obj = $(this);
+						$status = $obj.data('status');
+						$id = $obj.data('id');
+						$title = $obj.data('title');
+
+						let $url = "{php echo webUrl('',['do'=>'store/order','op'=>'order_status'])}";
+
+						$.ajax({
+							type: "POST",
+							url: $url,
+							dataType: 'json',
+							data: {
+								status: $status,
+								id: $id,
+							},
+							success: function (rs) {
+								console.log(rs);
+								if (rs.errno == '0') {
+									layer.msg('设置成功！', {
+										time: 500
+									},
+									function () {
+										$obj.closest('.box-body').find('.box-order-status').text($title);
+									});
+								} else {
+									layer.msg(rs.msg, {
+										offset: '20%',
+									});
+								}
+							},
+							error: function () {
+								layer.msg('保存过程发生错误，请与管理员联系', {
+									offset: '20%',
+								});
+							}
+						});
+					});
+				});
+
+
+				$(function () {
+					$('.pager').show();
+				});
+			</script>
+
+
+		{/if}
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<form class="layui-form" action="" method="post" id="data-form">
+				<div class="layui-tab layui-tab-brief" lay-filter="tab">
+					<ul class="layui-tab-title">
+						<li class="layui-this">数据初始化</li>
+					</ul>
+					<div class="layui-tab-content">
+						<!-- 数据初始化 -->
+						<div class="layui-tab-item layui-show">
+							<div class="layui-form-item">
+								<label class="layui-form-label">幻灯片</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="adv_data_clear" value="1" lay-skin="primary" title="清除数据">
+									<!-- <input type="checkbox" name="set_adv" value="1" lay-skin="primary" title="添加数据"> -->
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">单图</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="sole_data_clear" value="1" lay-skin="primary" title="清除数据">
+									<input type="checkbox" name="sole_add_tag" value="1" lay-skin="primary" title="添加标签数据">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">套图</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="multi_data_clear" value="1" lay-skin="primary" title="清除数据">
+									<input type="checkbox" name="multi_add_tag" value="1" lay-skin="primary" title="添加标签数据">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">装修攻略</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="guide_data_clear" value="1" lay-skin="primary" title="清除数据">
+									<input type="checkbox" name="guide_add_class" value="1" lay-skin="primary" title="添加分类数据">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">普通文章</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="news_data_clear" value="1" lay-skin="primary" title="清除数据">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">工地模块</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="site_data_clear" value="1" lay-skin="primary" title="清除数据">
+									<input type="checkbox" name="site_add_progress" value="1" lay-skin="primary" title="添加工地进度数据">
+									<input type="checkbox" name="site_add_type" value="1" lay-skin="primary" title="添加工地房型数据">
+									<input type="checkbox" name="site_add_style" value="1" lay-skin="primary" title="添加装修风格数据">
+									<input type="checkbox" name="site_add_mode" value="1" lay-skin="primary" title="添加装修方式数据">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">用户的收藏数据</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="user_data_collect_clear" value="1" lay-skin="primary" title="清除">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">全部数据</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="all_data_clear" value="1" lay-skin="primary" title="清除">
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label">协议</label>
+								<div class="layui-input-block">
+									<input type="checkbox" name="agreement" value="1" lay-skin="primary"
+										title="我已经做好了相关文件及数据库的备份工作，并自愿承担所存在的风险">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-tab-content" id="data-submit">
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="sdata">保存</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(sdata)', function(data){
+						let url = "{php echo webUrl('',['do'=>'other/sdata'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							var layer_index = layer.msg('加载中', {
+								icon: 16,
+								time: 0,
+								shade: 0.1,
+							});
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									// console.error(rs.code);
+									layer.close(layer.index);
+									if (rs.code == '0') {
+										layer.msg('操作成功' , {
+											time: 1000
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'other/sdata'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.close(layer.index);
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

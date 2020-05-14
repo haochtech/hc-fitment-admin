@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <link href="{MODULE_URL}template/public/css/reset-1.3.css" rel="stylesheet">
+        <style>
+            ::-webkit-scrollbar { background-color: rgba(0, 0, 0, 0.5); width: 0.75em; }
+            ::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.5); }
+        </style>
+        <script src="{MODULE_URL}template/public/js/jquery-1.11.1.min.js"></script>
+        <script >
+            function hideUrlBar() {
+                window.scrollTo(0, 1);
+            }
+            window.addEventListener("load", hideUrlBar);
+            window.addEventListener("resize", hideUrlBar);
+            window.addEventListener("orientationchange", hideUrlBar);
+        </script>
+    </head>
+    <body>
+        <script src="{MODULE_URL}template/public/js/vr/pano2vr_player.js?v={SLWL_VERSION}"></script>
+        <div id="container">
+            This content requires HTML5/CSS3, WebGL, or Adobe Flash Player Version 9 or higher.
+        </div>
+        <script>
+            pano=new pano2vrPlayer("container");
+            pano.readConfigString('{$str_xml}');
+            hideUrlBar();
+        </script>
+    </body>
+    <script>
+        $(function () {
+            $('#container').width($(window).width());
+            $('#container').height($(window).height());
+        });
+    </script>
+</html>

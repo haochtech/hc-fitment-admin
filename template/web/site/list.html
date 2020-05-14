@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li {if $operation=='display' } class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'site/list'])}">{$_W['slwl']['lang']['site_list_title_tab']}</a>
+					</li>
+					<li {if empty($one['id']) && $operation == 'post'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post'])}">{$_W['slwl']['lang']['add']}</a>
+					</li>
+					{if $one['id'] && $operation == 'post'}
+					<li class="layui-this">
+						<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post','id'=>$one['id']])}">{$_W['slwl']['lang']['edit']}</a>
+					</li>
+					{/if}
+
+					{if $site_id && ($operation == 'site_dy' || $operation == 'post_site_dy')}
+					<li {if $operation == 'site_dy'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'site/list','op'=>'site_dy','sid'=>$site_id])}">{$_W['slwl']['lang']['site_list_sitedy']}</a>
+					</li>{/if}
+					{if $site_id && ($operation == 'site_dy' || $operation == 'post_site_dy')}
+					<li {if empty($one['id']) && $operation == 'post_site_dy'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post_site_dy','sid'=>$site_id])}">{$_W['slwl']['lang']['add']}</a>
+					</li>{/if}
+					{if $site_id && $one['id'] && $operation == 'post_site_dy'}
+					<li class="layui-this">
+						<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post_site_dy','id'=>$one['id'],'sid'=>$site_id])}">{$_W['slwl']['lang']['edit']}</a>
+					</li>
+					{/if}
+				</ul>
+			</div>
+
+		{if $operation == 'display'}
+			<div class="box-tools">
+				<div class="box-search">
+					<form action="{php echo webUrl('',['do'=>'site/list'])}" method="post">
+						<div class="layui-input-inline">
+							<input type="text" name="keyword" value="{$keyword}" class="layui-input"
+								placeholder="{$_W['slwl']['lang']['title']}">
+						</div>
+						<div class="layui-input-inline">
+							<button class="layui-btn" lay-submit lay-filter="">{$_W['slwl']['lang']['search']}</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="layui-form">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>{$_W['slwl']['lang']['order']}</th>
+							<th>{$_W['slwl']['lang']['title']}</th>
+							<th>{$_W['slwl']['lang']['site_list_community']}</th>
+							<th>{$_W['slwl']['lang']['address']}</th>
+							<th>{$_W['slwl']['lang']['visible']}</th>
+							<th>{$_W['slwl']['lang']['status']}</th>
+							<th>{$_W['slwl']['lang']['operation']}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{php $status_enabled = array('0'=>$_W['slwl']['lang']['disabled'],'1'=>$_W['slwl']['lang']['enabled']); }
+						{php $status_visible = array('0'=>$_W['slwl']['lang']['public'],'1'=>$_W['slwl']['lang']['private']); }
+						{loop $list $item}
+						<tr>
+							<td class="wmin20">{$item['id']}</td>
+							<td class="wmin30">{$item['displayorder']}</td>
+							<td class="td-content">{$item['title']}</td>
+							<td>{$item['subdistrict_cn']}</td>
+							<td>{$item['address']}</td>
+							<td>{$status_visible[$item['visible']]}</td>
+							<td class="wmin30">{$status_enabled[$item['enabled']]}</td>
+							<td class="td-button w180">
+								<a href="{php echo webUrl('',['do'=>'site/list','op'=>'site_dy','sid'=>$item['id']])}"
+									class="layui-btn layui-btn-sm"
+									title="{$_W['slwl']['lang']['site_list_sitedy']}">{$_W['slwl']['lang']['site_list_sitedy']}</a>
+								<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post','id'=>$item['id']])}"
+									class="layui-btn layui-btn-sm"
+									title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+								<a href="javascript:;"
+									class="layui-btn layui-btn-danger layui-btn-sm btn-del" data-id="{$item['id']}"
+									title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+							</td>
+						</tr>
+						{/loop}
+					</tbody>
+				</table>
+				<div class="pager">
+					{$pager}
+				</div>
+			</div>
+
+			<script>
+				layui.use(['laypage', 'layer'], function(){
+					var laypage = layui.laypage;
+					var layer = layui.layer;
+
+					// 分页
+					laypage.render({
+						elem: $('.pager')
+						,limit: '{php echo $psize; }'
+						,count: '{php echo $total; }'
+						,theme: '#1E9FFF'
+						,curr:  '{php echo $pindex; }'
+						,hash: '{php echo $pindex; }'
+						,jump: function (obj, first) {
+							if (first != true) {
+								var currentPage = obj.curr; //获取点击的页码
+								window.location.href = "{php echo webUrl('',['do'=>'site/list'])}&page=" + currentPage;
+							}
+						}
+					});
+					$('.pager').show();
+
+					// 删除
+					$(document).on('click', '.btn-del', function () {
+						$obj = $(this);
+						$del_id = $obj.data('id');
+						layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+							offset: '20%',
+							btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+							scrollbar: false,
+							closeBtn: 0,
+						}, function (i) {
+						   layer.close(i);
+						}, function (i) {
+							let $url = "{php echo webUrl('',['do'=>'site/list','op'=>'delete'])}";
+
+							$.ajax({
+								type: "POST",
+								url: $url,
+								dataType: 'json',
+								data: {
+									id: $del_id
+								},
+								success: function (rs) {
+									console.log(rs);
+									if (rs.code == '0') {
+										layer.msg('删除成功', {
+											time: 500
+										},
+										function () {
+											$obj.closest('tr').fadeOut(200, function () {
+												$obj.remove();
+											});
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+										$obj.removeClass('lock');
+									}
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						});
+					});
+
+				});
+			</script>
+
+
+		{elseif $operation == 'post'}
+			<form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+				<input type="hidden" name="id" value="{$one['id']}" />
+				<div class="layui-tab-content">
+					<!-- 添加或编辑 -->
+					<div class="layui-tab-item layui-show">
+						<!-- 状态 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+							<div class="layui-input-block">
+								<input type="radio" name="enabled" value="1" title="{$_W['slwl']['lang']['enabled']}"
+									{if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+								<input type="radio" name="enabled" value="0" title="{$_W['slwl']['lang']['disabled']}"
+									{if $one['enabled']==0 && $one['id'] }checked{/if}>
+							</div>
+						</div>
+						<!-- 排序 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['order']}</label>
+							<div class="layui-input-block">
+								<input type="text" class="layui-input" name="displayorder" value="{$one['displayorder']}"
+									placeholder="{$_W['slwl']['lang']['order_placeholder']}">
+							</div>
+						</div>
+						<!-- 工地名称 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_name']}</label>
+							<div class="layui-input-block">
+								<input type="text" class="layui-input" name="title" lay-verify="required" value="{$one['title']}"
+									placeholder="{$_W['slwl']['lang']['site_list_name_placeholder']}">
+							</div>
+						</div>
+						<!-- 项目编号 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_project']}</label>
+							<div class="layui-input-block">
+								<input type="text" class="layui-input" name="project_code" lay-verify="required" value="{$one['project_code']}"
+									placeholder="{$_W['slwl']['lang']['site_list_project_placeholder']}">
+							</div>
+						</div>
+						<!-- 所属小区 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_their_community']}</label>
+							<div class="layui-input-block">
+								<select name="site_id" lay-verify="required">
+									<option value="">{$_W['slwl']['lang']['select_placeholder']}</option>
+									{loop $list_subdistrict $item}
+									<option value="{$item['id']}" {if $item['id']==$one['site_id'] }selected{/if}>{$item['title']}</option>
+									{/loop}
+								</select>
+							</div>
+						</div>
+						<!-- 地理位置 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['coordinate']}</label>
+							<div class="layui-input-block">
+								{php echo slwl_tpl_form_field_coordinate('map', $tmp_map)}
+							</div>
+						</div>
+						<!-- 地址 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['address']}</label>
+							<div class="layui-input-block">
+								<input type="text" class="layui-input" name="address" lay-verify="required" value="{$one['address']}"
+									placeholder="{$_W['slwl']['lang']['address_placeholder']}">
+							</div>
+						</div>
+						<!-- <div class="layui-form-item">
+							<label class="layui-form-label">可见状态</label>
+							<div class="layui-input-block">
+								<input type="radio" name="visible" value="0" title="公开" {if $one['visible']==0}checked{/if}>
+								<input type="radio" name="visible" value="1" title="私有" {if $one['visible']==1}checked{/if}>
+							</div>
+						</div> -->
+						<!-- 图片 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['pic']}</label>
+							<div class="layui-input-block">
+								{php echo slwl_tpl_form_field_image('thumb', $one['thumb']);}
+								<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['site_list_pic_tips']}</div>
+							</div>
+						</div>
+						<!-- 装修预算 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_budget']}</label>
+							<div class="layui-input-block">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input left" name="budget" lay-verify="required"
+										value="{$one['budget_format']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['yuan']}</span>
+								</div>
+							</div>
+						</div>
+						<!-- 浏览数 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['view_count']}</label>
+							<div class="layui-input-block">
+								<input type="number" name="view_count" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+									value="{$one['view_count']}" class="layui-input">
+							</div>
+						</div>
+						<!-- 收藏数 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['fav_count']}</label>
+							<div class="layui-input-block">
+								<input type="number" name="fav_count" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+									value="{$one['fav_count']}" class="layui-input">
+							</div>
+						</div>
+						<!-- 户型 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_house_type']}</label>
+							<div class="layui-input-inline w200">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input center" name="house_type[room]" lay-verify="required"
+										value="{$one['house_type_format']['room']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['site_list_site_type_1']}</span>
+								</div>
+							</div>
+							<div class="layui-input-inline w200">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input center" name="house_type[hall]" lay-verify="required"
+										value="{$one['house_type_format']['hall']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['site_list_site_type_2']}</span>
+								</div>
+							</div>
+							<div class="layui-input-inline w200">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input center" name="house_type[kitchen]" lay-verify="required"
+										value="{$one['house_type_format']['kitchen']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['site_list_site_type_3']}</span>
+								</div>
+							</div>
+							<div class="layui-input-inline w200">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input center" name="house_type[toilet]" lay-verify="required"
+										value="{$one['house_type_format']['toilet']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['site_list_site_type_4']}</span>
+								</div>
+							</div>
+						</div>
+						<!-- 面积 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_area']}</label>
+							<div class="layui-input-block">
+								<div class="input-group form-group">
+									<input type="number" class="layui-input left" name="area" lay-verify="required"
+										placeholder="{$_W['slwl']['lang']['site_list_area_placeholder']}"
+										value="{$one['area']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+									<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['site_list_area_unit']}</span>
+								</div>
+							</div>
+						</div>
+						<!-- 工地进度 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_site_progress']}</label>
+							<div class="layui-input-block">
+								{loop $list_progress $index $item}
+									<input type="radio" name="options[site_progress]" value="a{$item['id']}" title="{$item['title']}"
+										{if $index==0 || $item['checked']=='1'}checked{/if}>
+								{/loop}
+							</div>
+						</div>
+						<!-- 工地房型 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_site_type']}</label>
+							<div class="layui-input-block">
+								{loop $list_type $index $item}
+									<input type="checkbox" name="options[site_type][]" value="b{$item['id']}" title="{$item['title']}"
+										lay-skin="primary" {if $item['checked']=='1'}checked{/if}>
+								{/loop}
+							</div>
+						</div>
+						<!-- 装修风格 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_site_style']}</label>
+							<div class="layui-input-block">
+								{loop $list_style $index $item}
+									<input type="checkbox" name="options[site_style][]" value="c{$item['id']}" title="{$item['title']}"
+										lay-skin="primary" {if $item['checked']=='1'}checked{/if}>
+								{/loop}
+							</div>
+						</div>
+						<!-- 装修方式 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_site_mode']}</label>
+							<div class="layui-input-block">
+								{loop $list_mode $index $item}
+									<input type="radio" name="options[site_mode]" value="d{$item['id']}" title="{$item['title']}"
+										{if $index==0 || $item['checked']=='1'}checked{/if}>
+								{/loop}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="layui-tab-content fixed" id="data-submit">
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="sitelist">{$_W['slwl']['lang']['submit']}</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(sitelist)', function(data){
+						let url = "{php echo webUrl('',['do'=>'site/list','op'=>'post'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'site/list'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+						return false;
+					});
+				});
+			</script>
+
+
+		{elseif $operation == 'site_dy'}
+			<div class="layui-form">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>{$_W['slwl']['lang']['order']}</th>
+							<th>{$_W['slwl']['lang']['title']}</th>
+							<th>{$_W['slwl']['lang']['progress']}</th>
+							<th>{$_W['slwl']['lang']['status']}</th>
+							<th>{$_W['slwl']['lang']['operation']}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{php $this_statuses = array('0'=>$_W['slwl']['lang']['disabled'],'1'=>$_W['slwl']['lang']['enabled']); }
+						{loop $list $item}
+						<tr>
+							<td class="wmin20">{$item['id']}</td>
+							<td class="wmin30">{$item['displayorder']}</td>
+							<td class="td-content">{$item['title']}</td>
+							<td class="td-content">{$item['id_title']}</td>
+							<td class="wmin30">{$this_statuses[$item['enabled']]}</td>
+							<td class="td-button">
+								<a href="{php echo webUrl('',['do'=>'site/list','op'=>'post_site_dy','id'=>$item['id'],'sid'=>$item['site_id']])}"
+									class="layui-btn"
+									title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+								<a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$item['id']}"
+									title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+							</td>
+						</tr>
+						{/loop}
+					</tbody>
+				</table>
+				<div class="pager">
+					{$pager}
+				</div>
+			</div>
+
+			<script>
+				layui.use(['laypage', 'layer'], function(){
+					var laypage = layui.laypage;
+					var layer = layui.layer;
+
+					// 分页
+					laypage.render({
+						elem: $('.pager')
+						,limit: '{php echo $psize; }'
+						,count: '{php echo $total; }'
+						,theme: '#1E9FFF'
+						,curr:  '{php echo $pindex; }'
+						,hash: '{php echo $pindex; }'
+						,jump: function (obj, first) {
+							if (first != true) {
+								var currentPage = obj.curr; //获取点击的页码
+								window.location.href = "{php echo webUrl('',['do'=>'site/list'])}&page=" + currentPage;
+							}
+						}
+					});
+					$('.pager').show();
+
+					// 删除
+					$(document).on('click', '.btn-del', function () {
+						$obj = $(this);
+						$del_id = $obj.data('id');
+						layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+							offset: '20%',
+							btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+							scrollbar: false,
+							closeBtn: 0,
+						}, function (i) {
+						   layer.close(i);
+						}, function (i) {
+							let $url = "{php echo webUrl('',['do'=>'site/list','op'=>'delete_site_dy'])}";
+
+							$.ajax({
+								type: "POST",
+								url: $url,
+								dataType: 'json',
+								data: {
+									id: $del_id
+								},
+								success: function (rs) {
+									console.log(rs);
+									if (rs.code == '0') {
+										layer.msg('删除成功', {
+											time: 500
+										},
+										function () {
+											$obj.closest('tr').fadeOut(200, function () {
+												$obj.remove();
+											});
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+										$obj.removeClass('lock');
+									}
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						});
+					});
+				});
+			</script>
+
+
+		{elseif $operation == 'post_site_dy'}
+			<form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+				<input type="hidden" name="id" value="{$one['id']}" />
+				<input type="hidden" name="sid" value="{$site_id}" />
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<!-- 状态 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+							<div class="layui-input-block">
+								<input type="radio" name="enabled" value="1" title="{$_W['slwl']['lang']['enabled']}"
+									{if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+								<input type="radio" name="enabled" value="0" title="{$_W['slwl']['lang']['disabled']}"
+									{if $one['enabled']==0 && $one['id'] }checked{/if}>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['site_list_site_progress']}</label>
+							<div class="layui-input-block">
+								{loop $list_progress $index $item}
+									<input type="radio" name="site_progress" value="{$item['id']}" title="{$item['title']}"
+										{if $index==0 || $item['checked']=='1'}checked{/if}>
+								{/loop}
+							</div>
+						</div>
+						<!-- 排序 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['order']}</label>
+							<div class="layui-input-block">
+								<input type="text" name="displayorder" value="{$one['displayorder']}" class="layui-input"
+									placeholder="{$_W['slwl']['lang']['order_placeholder']}">
+							</div>
+						</div>
+						<!-- 标题 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['title']}</label>
+							<div class="layui-input-block">
+								<input type="text" name="title" lay-verify="required" value="{$one['title']}" class="layui-input"
+									placeholder="{$_W['slwl']['lang']['title']}">
+							</div>
+						</div>
+						<!-- 简介 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['subtitle']}</label>
+							<div class="layui-input-block">
+								<textarea name="intro" placeholder="{$_W['slwl']['lang']['subtitle']}"
+									class="layui-textarea">{$one['intro']}</textarea>
+							</div>
+						</div>
+						<!-- <div class="layui-form-item">
+							<label class="layui-form-label">图片</label>
+							<div class="layui-input-block">
+								{php echo slwl_tpl_form_field_image('thumb', $one['thumb']);}
+								<div class="layui-form-mid layui-word-aux">图片大小推荐为 750 * 310 像素</div>
+							</div>
+						</div> -->
+						<!-- 其他图片 -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">{$_W['slwl']['lang']['pic_order']}</label>
+							<div class="layui-input-block">
+								{php echo slwl_tpl_form_field_multi_image('thumbs', $thumbs)}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="layui-tab-content fixed" id="data-submit">
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="post_site_dy">{$_W['slwl']['lang']['submit']}</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(post_site_dy)', function(data){
+						let url = "{php echo webUrl('',['do'=>'site/list','op'=>'post_site_dy'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'site/list','op'=>'site_dy','sid'=>$site_id])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+						return false;
+					});
+				});
+			</script>
+
+
+		{/if}
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

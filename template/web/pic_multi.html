@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li {if $operation == 'display'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('pic_multi', array('op' =>'display'))}">{$_W['slwl']['lang']['pic_multi_title_tab']}</a>
+                    </li>
+                    <li {if empty($one['id']) && $operation == 'post'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('pic_multi', array('op' =>'post'))}">{$_W['slwl']['lang']['add']}</a>
+                    </li>
+                    {if $one['id'] && $operation == 'post'}
+                        <li class="layui-this">
+                            <a href="{php echo webUrl('pic_multi', array('op' =>'post', 'id'=>$one['id']))}">{$_W['slwl']['lang']['edit']}</a>
+                        </li>
+                    {/if}
+
+                    {if $one['id'] && $operation == 'post_pic'}
+                        <li class="layui-this">
+                            <a href="{php echo webUrl('pic_multi', array('op' =>'post_pic', 'id'=>$one['id']))}">{$_W['slwl']['lang']['pic_multi_pic_edit']}</a>
+                        </li>
+                    {/if}
+
+                    <li {if $operation == 'tag'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('pic_multi', array('op' =>'tag'))}">{$_W['slwl']['lang']['tag']}</a>
+                    </li>
+                    <li {if empty($one_tag['id']) && $operation == 'post_tag'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('pic_multi',array('op' =>'post_tag'))}">{$_W['slwl']['lang']['add']}</a>
+                    </li>
+                    {if $one_tag['id'] && $operation == 'post_tag'}
+                        <li class="layui-this">
+                            <a href="{php echo webUrl('pic_multi',array('op' =>'post_tag','id'=>$one_tag['id']))}">{$_W['slwl']['lang']['edit']}</a>
+                        </li>
+                    {/if}
+                </ul>
+            </div>
+
+
+        {if $operation == 'display'}
+            <style>
+                .box-code { display: none; padding: 14px; }
+                .box-code .box-img { width: 256px; height: 256px; }
+                .img-xs img { width: 22px; height: 22px; vertical-align: -7px; }
+            </style>
+            <div class="box-tools">
+                <div class="box-search">
+                    <form action="{php echo webUrl('pic_multi')}" method="post">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" value="{$keyword}" class="layui-input"
+                                placeholder="{$_W['slwl']['lang']['title']}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="">{$_W['slwl']['lang']['search']}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{$_W['slwl']['lang']['order']}</th>
+                            <th>{$_W['slwl']['lang']['title']}</th>
+                            <th>{$_W['slwl']['lang']['pic']}</th>
+                            <th>{$_W['slwl']['lang']['view_count']}</th>
+                            <th>{$_W['slwl']['lang']['fav_count']}</th>
+                            <th>{$_W['slwl']['lang']['status']}</th>
+                            <th>{$_W['slwl']['lang']['operation']}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $this_statuses = array('0'=>$_W['slwl']['lang']['disabled'],'1'=>$_W['slwl']['lang']['enabled']); }
+                        {loop $list $item}
+                        <tr>
+                            <td class="wmin20">{$item['id']}</td>
+                            <td class="wmin30">{$item['displayorder']}</td>
+                            <td class="td-content">{$item['name']}</td>
+                            <td>
+                                <div class="box-table-img">
+                                    <img src="{php echo tomedia($item['thumb'])}" data-url="{php echo tomedia($item['thumb'])}" >
+                                </div>
+                            </td>
+                            <td>{$item['show_num']}</td>
+                            <td>{$item['fav_num']}</td>
+                            <td class="wmin30">{$this_statuses[$item['enabled']]}</td>
+                            <td class="td-button">
+                                <a href="javascript:;" class="layui-btn layui-btn-normal layui-btn-sm box-img-show img-xs"
+                                    title="{$_W['slwl']['lang']['qrcode_show']}"
+                                    data-url="{php echo tomedia($item['qrcode'])}"
+                                    data-id="{$item['id']}">
+                                    <img src="{php echo tomedia($item['qrcode'])}">
+                                    <span>{$_W['slwl']['lang']['qrcode']}</span>
+                                </a>
+                                <a href="{php echo webUrl('pic_multi', array('op' => 'post', 'id' => $item['id']))}"
+                                    class="layui-btn layui-btn-normal layui-btn-sm"
+                                    title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+                                <div style="height: 10px;"></div>
+                                <a href="{php echo webUrl('pic_multi', array('op' => 'post_pic', 'id' => $item['id']))}"
+                                    class="layui-btn layui-btn-normal layui-btn-sm"
+                                    title="{$_W['slwl']['lang']['pic_multi_pic_edit']}">{$_W['slwl']['lang']['pic_multi_pic_edit']}</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-danger layui-btn-sm btn-del"
+                                    data-id="{$item['id']}"
+                                    title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['qrcode']}</a>
+                            </td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use(['laypage', 'layer'], function(){
+                    var laypage = layui.laypage;
+                    var layer = layui.layer;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo webUrl('pic_multi')}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+
+                    // 删除
+                    $(document).on('click', '.btn-del', function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                            layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo webUrl('pic_multi', array('op'=>'delete'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+
+                    $(document).on('click', '.box-img-show', function () {
+                        let $obj = $(this);
+                        let url = $obj.data('url');
+                        let build_id = $obj.data('id');
+
+                        $('#qrcode').find('img').attr('src', url);
+                        $('#qrcode').find('.qr-id').val(build_id);
+                        $tmp_obj = $obj;
+
+                        layer.open({
+                            offset: '20%',
+                            area: '400px',
+                            type: 1,
+                            shift: 2,
+                            offset: '20%',
+                            shadeClose: true, //开启遮罩关闭
+                            content: $('#qrcode'),
+                        });
+                    });
+
+                    // 生成
+                    $(document).on('click', '.btn-build', function () {
+                        $obj = $(this);
+                        $build_id = $obj.closest('#qrcode').find('.qr-id').val();
+                        $str = '只有已发布的程序才能生成，确定要生成吗';
+                        layer.confirm($str, {
+                            area: '500px',
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", '生成'],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo webUrl('pic_multi', array('op'=>'build'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $build_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('刷新成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('#qrcode').find('img')
+                                                .attr('src', rs.message.message.thumb_url)
+                                                .data('url', rs.message.message.thumb_url);
+                                            $tmp_obj.find('img').attr('src', rs.message.message.thumb_url);
+                                        });
+                                    } else {
+                                        layer.alert(rs.message.message, {
+                                            offset: '20%',
+                                            area: '500px',
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.alert("{$_W['slwl']['lang']['tips_submit_error']}");
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'post'}
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <div class="layui-tab-content" lay-filter="tab">
+                    <!-- 状态 -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="enabled" value="1" title="{$_W['slwl']['lang']['enabled']}"
+                                {if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+                            <input type="radio" name="enabled" value="0" title="{$_W['slwl']['lang']['disabled']}"
+                                {if $one['enabled']==0 && $one['id'] }checked{/if}>
+                        </div>
+                    </div>
+                    <!-- 排序 -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$_W['slwl']['lang']['order']}</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="displayorder" value="{$one['displayorder']}" class="layui-input"
+                                placeholder="{$_W['slwl']['lang']['order_placeholder']}">
+                        </div>
+                    </div>
+                    <!-- 标题 -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$_W['slwl']['lang']['title']}</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" value="{$one['name']}" class="layui-input">
+                        </div>
+                    </div>
+                    <!-- 浏览数 -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$_W['slwl']['lang']['view_count']}</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="show_num" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+                                value="{$one['show_num']}" class="layui-input">
+                        </div>
+                    </div>
+                    <!-- 收藏数 -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$_W['slwl']['lang']['fav_count']}</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="fav_num" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+                                value="{$one['fav_num']}" class="layui-input">
+                        </div>
+                    </div>
+                    {loop $list $item}
+                    {if $item['parentid']=='0'}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$item['name']}</label>
+                        <div class="layui-input-block">
+                            {loop $list $row}
+                            {if $row['parentid']==$item['id']}
+                                <input type="checkbox" name="options[{$row['id']}]" value="{$row['id']}" lay-skin="primary"
+                                    title="{$row['name']}" {if $row['checked']=='1' }checked{/if}>
+                            {/if}
+                            {/loop}
+                        </div>
+                    </div>
+                    {/if}
+                    {/loop}
+                </div>
+
+                <div class="layui-tab-content fixed" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="pic_multi">{$_W['slwl']['lang']['submit']}</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(pic_multi)', function(data){
+                        let url = "{php echo webUrl('pic_multi', array('op'=>'post'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('pic_multi')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+        {elseif $operation == 'post_pic'}
+            <style type="text/css">
+                .photo-list { overflow: hidden; }
+                .photo-list .photo-item { position: relative; min-height: 90px; background-color: rgba(66, 139, 202,.1); }
+                .photo-list .layui-input-inline.box-btn { width: 510px; }
+                .photo-list .box-item { padding-left: 150px; }
+                .photo-list .box-img { position: absolute; top: 15px; left: 15px; width: 150px; height: 90px; text-align: center; background: #fff; }
+                .photo-list .box-img img { max-width: 100%; height: 100%; }
+                .photo-list .box-label { width: 40px; text-align: left; }
+                .photo-list .box-btn { position: absolute; top: 15px; right: 0; }
+                .photo-list .box-cover-checked { border-color: #428bca; color: #fff; background: #428bca; }
+            </style>
+            <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <input type="hidden" name="token" value="{$_W['token']}" />
+                <div>
+                    <button type="button" class="layui-btn" id="btn-img-upload">{$_W['slwl']['lang']['add']}</button>
+                    <button type="button" class="layui-btn layui-btn-danger" id="btn-img-empty">{$_W['slwl']['lang']['all_delete']}</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="pic_multi">{$_W['slwl']['lang']['save']}</button>
+                </div>
+
+                <div style="height: 16px;"></div>
+
+                <div class="photo-list">
+                    {loop $smeta $index $item}
+                    <blockquote class="layui-elem-quote photo-item">
+                        <input type="hidden" class="input-attr" name="options[attachment][{$index}]" value="{$item['attachment']}">
+                        <div class="layui-form-item box-item">
+                            <div class="box-img"><img src="{php echo tomedia($item['attachment'])}"></div>
+                            <label class="layui-form-label box-label">{$_W['slwl']['lang']['title']}</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="options[title][{$index}]" placeholder="{$_W['slwl']['lang']['title']}"
+                                    class="layui-input" value="{$item['title']}">
+                            </div>
+                            <div class="layui-input-inline box-btn">
+                                <input type="hidden" class="input-cover-val" name="options[cover][{$index}]" value="{$item['cover']}">
+                                <button type="button" class="layui-btn layui-btn-primary btn-cover {if $item['cover']==1}box-cover-checked{/if}">{$_W['slwl']['lang']['set_cover']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary btn-move-top">{$_W['slwl']['lang']['move_top']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary btn-move-up">{$_W['slwl']['lang']['move_up']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary btn-move-down">{$_W['slwl']['lang']['move_down']}</button>
+                                <button type="button" class="layui-btn layui-btn-primary btn-move-bottom">{$_W['slwl']['lang']['move_bottom']}</button>
+                                <button type="button" class="layui-btn layui-btn-danger btn-delete">{$_W['slwl']['lang']['delete']}</button>
+                            </div>
+                        </div>
+                    </blockquote>
+                    {/loop}
+                </div>
+            </form>
+
+            <div class="photo-clone" style="display: none;">
+                <blockquote class="layui-elem-quote photo-item">
+                    <input type="hidden" class="input-attr" name="options[attachment][]">
+                    <div class="layui-form-item box-item">
+                        <div class="box-img"><img src="{MODULE_URL}img/building.jpg"></div>
+                        <label class="layui-form-label box-label">{$_W['slwl']['lang']['title']}</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="options[title][]"
+                                placeholder="{$_W['slwl']['lang']['title']}" class="layui-input input-filename">
+                        </div>
+                        <div class="layui-input-inline box-btn">
+                            <input type="hidden" class="input-cover-val" name="options[cover][]">
+                            <button type="button" class="layui-btn layui-btn-primary btn-cover">{$_W['slwl']['lang']['set_cover']}</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-top">{$_W['slwl']['lang']['move_top']}</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-up">{$_W['slwl']['lang']['move_up']}</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-down">{$_W['slwl']['lang']['move_down']}</button>
+                            <button type="button" class="layui-btn layui-btn-primary btn-move-bottom">{$_W['slwl']['lang']['move_bottom']}</button>
+                            <button type="button" class="layui-btn layui-btn-danger btn-delete">{$_W['slwl']['lang']['delete']}</button>
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
+
+            <script type="text/javascript">
+                var sub_num = 9000;
+
+                $(function () {
+                    // 上传
+                    $(document).on('click', '#btn-img-upload', function () {
+                        require(["util"], function (util) {
+                            var options = new Array();
+                            options['multiple'] = true;
+                            util.image('', function (elm) {
+                                // console.log(elm);
+                                $.each(elm, function (i, e) {
+                                    if (e.url) {
+                                        $obj = $('.photo-clone .photo-item').clone(true);
+
+                                        $obj.find('.input-attr').attr('name', 'options[attachment][' + sub_num + ']').val(e.attachment);
+                                        $obj.find('.box-img img').attr('src', e.url);
+                                        $obj.find('.input-filename').attr('name', 'options[title][' + sub_num + ']').val(e.filename);
+                                        $obj.find('.input-cover-val').attr('name', 'options[cover][' + sub_num + ']').val('0');
+
+                                        $('.photo-list').append($obj);
+
+                                        sub_num += 1;
+                                    }
+                                    if (e.media_id) {
+                                        $obj.find('.input-attr').val(e.media_id);
+                                    }
+                                });
+                            }, options);
+                        });
+                    });
+
+                    // 清空
+                    $(document).on('click', '#btn-img-empty', function () {
+                        layer.confirm('确定要全部删除吗？', {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"]
+                        }, function(i){
+                            layer.close(i);
+                        }, function(i) {
+                            $('.photo-list').empty();
+                        });
+                    });
+
+                    // 设为封面
+                    $(document).on('click', '.btn-cover', function () {
+                        var $obj = $(this).closest('.photo-item');
+                        var $box = $(this).closest('.photo-list');
+
+                        $box.find('.btn-cover').removeClass('box-cover-checked');
+                        $box.find('.input-cover-val').val('0');
+                        $obj.find('.btn-cover').addClass('box-cover-checked');
+                        $obj.find('.input-cover-val').val('1');
+                    });
+
+                    // 置顶
+                    $(document).on('click', '.btn-move-top', function () {
+                        var $obj = $(this).closest('.photo-item');
+                        var $box = $(this).closest('.photo-list');
+
+                        if ($obj.prev().html != '') {
+                            $obj.prependTo($box);
+                        }
+                    });
+
+                    // 上移
+                    $(document).on('click', '.btn-move-up', function () {
+                        var $obj = $(this).closest('.photo-item');
+
+                        if ($obj.prev().html != '') {
+                            $obj.insertBefore($obj.prev());
+                        }
+                    });
+
+                    // 下移
+                    $(document).on('click', '.btn-move-down', function () {
+                        var $obj = $(this).closest('.photo-item');
+
+                        if ($obj.next().html != '') {
+                            $obj.insertAfter($obj.next());
+                        }
+                    });
+
+                    // 置底
+                    $(document).on('click', '.btn-move-bottom', function () {
+                        var $obj = $(this).closest('.photo-item');
+                        var $box = $(this).closest('.photo-list');
+
+                        if ($obj.prev().html != '') {
+                            $obj.appendTo($box);
+                        }
+                    });
+
+                    // 删除
+                    $(document).on('click', '.btn-delete', function () {
+                        var $obj = $(this);
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"]
+                        }, function(i){
+                            layer.close(i);
+                        }, function(i) {
+                            $obj.closest('.photo-item').remove();
+                        });
+                    });
+                });
+            </script>
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(pic_multi)', function(data){
+                        let url = "{php echo webUrl('pic_multi', array('op'=>'post_pic'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('pic_multi')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'tag'}
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <colgroup>
+                        <col width="50">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{$_W['slwl']['lang']['order']}</th>
+                            <th>{$_W['slwl']['lang']['title']}</th>
+                            <th>{$_W['slwl']['lang']['status']}</th>
+                            <th>{$_W['slwl']['lang']['operation']}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $this_statuses = array('0'=>$_W['slwl']['lang']['disabled'],'1'=>$_W['slwl']['lang']['enabled']); }
+                        {loop $list $item}
+                        {if $item['parentid']=='0'}
+                        <tr>
+                            <td>{$item['id']}</td>
+                            <td>{$item['displayorder']}</td>
+                            <td>{$item['name']}</td>
+                            <td>{$this_statuses[$item['enabled']]}</td>
+                            <td style="text-align:left;">
+                                <a href="{php echo webUrl('pic_multi', array('op'=>'post_tag', 'tid'=>$item['id']))}"
+                                    class="layui-btn layui-btn-normal"
+                                    title="{$_W['slwl']['lang']['tag_child_add']}">{$_W['slwl']['lang']['tag_child_add']}</a>
+                                <a href="{php echo webUrl('pic_multi', array('op'=>'post_tag', 'id'=>$item['id']))}"
+                                    class="layui-btn layui-btn-normal"
+                                    title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$item['id']}"
+                                    title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+                            </td>
+                        </tr>
+                            {loop $list $row}
+                            {if $row['parentid']==$item['id']}
+                                <tr>
+                                    <td>{$row['id']}</td>
+                                    <td>{$row['displayorder']}</td>
+                                    <td><img src="{MODULE_URL}template/public/images/img_padding_left.png">{$row['name']}</td>
+                                    <td>{$this_statuses[$row['enabled']]}</td>
+                                    <td style="text-align:left;">
+                                        <a href="{php echo webUrl('pic_multi', array('op'=>'post_tag', 'id'=>$row['id'], 'tid'=>$row['parentid']))}"
+                                            class="layui-btn layui-btn-normal"
+                                            title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+                                        <a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$row['id']}"
+                                            title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+                                    </td>
+                                </tr>
+                            {/if}
+                            {/loop}
+                        {/if}
+                        {/loop}
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+
+                    // 删除
+                    $(document).on('click', '.btn-del', function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo webUrl('pic_multi', array('op'=>'delete_tag'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+                });
+            </script>
+
+        {elseif $operation == 'post_tag'}
+            <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{$one_tag['id']}" />
+                <!-- 状态 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="enabled" value="1" title="{$_W['slwl']['lang']['enabled']}"
+                            {if $one_tag['enabled']==1 || empty($one_tag['enabled']) }checked{/if}>
+                        <input type="radio" name="enabled" value="0" title="{$_W['slwl']['lang']['disabled']}"
+                            {if $one_tag['enabled']==0 && isset($one_tag['enabled']) }checked{/if}>
+                    </div>
+                </div>
+                {if $tid > 0}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['tag_parent']}</label>
+                    <div class="layui-input-block">
+                        <select name="tid">
+                            <option value="">{$_W['slwl']['lang']['select_placeholder']}</option>
+                            {loop $term_list $item}
+                            <option value="{$item['id']}" {if $item['id']==$tid }selected{/if}>{$item['name']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                {/if}
+                <!-- 排序 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['order']}</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="displayorder" value="{$one_tag['displayorder']}" class="layui-input"
+                            placeholder="{$_W['slwl']['lang']['order_placeholder']}">
+                    </div>
+                </div>
+                <!-- 标题 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['title']}</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" lay-verify="required" value="{$one_tag['name']}" class="layui-input"
+                            placeholder="{if !($tid > 0)}{$_W['slwl']['lang']['pic_multi_tag_title_placeholder']}{/if}">
+                    </div>
+                </div>
+                <!-- 套数 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['pic_multi_tag_suite']}</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="case" oninput="if(value.length>8)value=value.slice(0,8)"
+                            value="{$one_tag['case']}" class="layui-input" >
+                    </div>
+                </div>
+                <!-- 属性 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['attribute']}</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" lay-skin="primary" name="isrecommand" value="1"
+                            title="{$_W['slwl']['lang']['pic_multi_tag_suite_placeholder']}"
+                            {if $one_tag['isrecommand']==1 }checked{/if}>
+                    </div>
+                </div>
+                {if $tid > 0}
+                <!-- 图片 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['pic']}</label>
+                    <div class="layui-input-block">
+                        {php echo slwl_tpl_form_field_image('thumb', $one_tag['thumb']);}
+                        <div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['pic_multi_tag_pic_tips']}</div>
+                    </div>
+                </div>
+                {/if}
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="tag">{$_W['slwl']['lang']['submit']}</button>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(tag)', function(data){
+                        let url = "{php echo webUrl('pic_multi', array('op'=>'post_tag'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('pic_multi', array('op'=>'tag'))}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                });
+            </script>
+
+
+        {/if}
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+    {if $operation == 'display'}
+        <div id="qrcode" class="box-code">
+            <input type="hidden" class="qr-id" />
+            <input type="hidden" class="qr-url" />
+            <div style="text-align: center;"><img class="box-img" src=""></div>
+            <div style="padding-top: 30px; text-align: center;">
+                <button class="layui-btn layui-btn-normal btn-build">{$_W['slwl']['lang']['refresh']}</button>
+            </div>
+        </div>
+    {/if}
+
+{template 'public/footer'}
+</body>
+</html>

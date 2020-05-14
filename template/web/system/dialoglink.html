@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+
+    <style>
+        .pad-left-right-none { padding-left: 0; padding-right: 0; }
+        .dialog-table { margin-top: 0; margin-bottom: 0; }
+        .layui-tab-title > li.layui-this{ pointer-events: none; }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div class="layui-tab box-tab-my">
+        <ul class="layui-tab-title">
+            <li data-op="box-sys" class="layui-this">系统</li>
+            <li data-op="box-wxapp">小程序</li>
+            <li data-op="box-strategy-act">攻略文章</li>
+            <li data-op="box-ordinary-act">普通文章</li>
+            <li data-op="box-adact">单页面</li>
+            <li data-op="box-store-term">商城分类</li>
+            <li data-op="box-store-good">商城商品</li>
+            <li data-op="box-product">产品中心</li>
+            <li data-op="box-panorama">360全景</li>
+            <li data-op="box-form">表单页面</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form box-body">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>首页</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="default" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>一键拨号</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="tel" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>一键导航</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="location" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>设计师列表</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="stylist" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>留言(即将废弃，请到表单页面去选择)</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/guestbook/guestbook" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>在线预约(即将废弃，请到表单页面去选择)</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/reserve/reserve" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>装修计算器</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/calc/calc" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>图库</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="pic" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>我的（个人中心）</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="ucenter" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>免费设计(即将废弃，请到表单页面去选择)</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/style/style" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>工地直播</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="site" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>商城</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="shop" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>商城模块-领券中心</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="^coupons-supply" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>产品中心</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="products" title="选择">选择</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>360全景</td>
+                                <td style="text-align:left;">
+                                    <a href="javascript:;" class="btn btn-default btn-a" data-url="panorama" title="选择">选择</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- 跳转小程序 -->
+            <div class="layui-tab-item box-wxapp">
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-wxapp" placeholder="请输入跳转小程序标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-wxapp">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的跳转小程序连接，请更换关键字后重试。</div>
+            </div>
+
+            <!-- 攻略文章 -->
+            <div class="layui-tab-item box-strategy-act">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-strategy" placeholder="请输入攻略文章标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-strategy">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的攻略文章，请更换关键字后重试。</div>
+
+            </div>
+
+            <!-- 普通文章 -->
+            <div class="layui-tab-item box-ordinary-act">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-ordinary" placeholder="请输入普通文章标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-ordinary">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的普通文章，请更换关键字后重试。</div>
+
+            </div>
+
+            <!-- 单页面 -->
+            <div class="layui-tab-item box-adact">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-adact" placeholder="请输入单页面标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-adact">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的单页面，请更换关键字后重试。</div>
+
+            </div>
+
+            <!-- 商城分类 -->
+            <div class="layui-tab-item box-store-term">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-store-term-search" placeholder="请输入商城模块分类标题(只支持二级分类)">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-store-term-search">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pager">
+                    {$pager_store}
+                </div>
+                <div class="box-body-search-not">抱歉！未查询到与“ <span></span> ”相关的商城分类，请更换关键字后重试。</div>
+
+            </div>
+
+            <!-- 商城商品 -->
+            <div class="layui-tab-item box-store-good">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-store-good-search" placeholder="请输入商城模块商品标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-store-good-search">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉！未查询到与“ <span></span> ”相关的商城商品，请更换关键字后重试。</div>
+            </div>
+
+            <!-- 产品 -->
+            <div class="layui-tab-item box-product">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-product" placeholder="请输入产品标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-product">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的单页面，请更换关键字后重试。</div>
+
+            </div>
+
+            <!-- 360全景 -->
+            <div class="layui-tab-item box-panorama">
+
+                <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-panorama" placeholder="请输入360全景标题">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-panorama">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的全景，请更换关键字后重试。</div>
+
+            </div>
+
+            <div class="layui-tab-item box-form">
+                 <div class="layui-form-item">
+                    <div class="input-group">
+                        <input type="text" class="layui-input" name="" id="input-search-form" placeholder="请输入表单名">
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-default" id="btn-search-form">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form box-body-search">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col width="60">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="box-tbody">
+                            <!-- <tr>
+                                <td><span class="title">标题</span></td>
+                                <td><a href="javascript:;" class="btn btn-default btn-a" data-url="/pages/act/act?id=1" title="选择">选择</a></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body-search-not">抱歉未查询到与“ <span></span> ”相关的表单，请更换关键字后重试。</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="div-clone">
+        <table>
+            <tbody>
+                <tr class="item">
+                    <td><span class="title">标题</span></td>
+                    <td><a href="javascript:;" class="btn btn-default btn-a" title="选择">选择</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(function () {
+            // 跳转小程序
+            $(document).on('click', '#btn-search-wxapp', function () {
+                var $obj = $(this);
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_wxapp'])}";
+                let $input = $('#input-search-wxapp').val();
+
+                $('.box-wxapp .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-wxapp .box-body-search').show();
+                            $('.box-wxapp .box-body-search-not').hide();
+
+                            $('.box-wxapp .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.title);
+                                $ghost.find('.btn-a').data('url', 'wxapp?id=' + e.id);
+
+                                $('.box-wxapp .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-wxapp .box-body-search').hide();
+                            $('.box-wxapp .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 攻略文章
+            $(document).on('click', '#btn-search-strategy', function () {
+                var $obj = $(this);
+
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_strategy'])}";
+                let $input = $('#input-search-strategy').val();
+
+                // $obj.html('正在加载...');
+                $('.box-strategy-act .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-strategy-act .box-body-search').show();
+                            $('.box-strategy-act .box-body-search-not').hide();
+
+                            $('.box-strategy-act .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.name);
+                                $ghost.find('.btn-a').data('url', 'article?type=act&id=' + e.id);
+
+                                $('.box-strategy-act .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-strategy-act .box-body-search').hide();
+                            $('.box-strategy-act .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 普通文章
+            $(document).on('click', '#btn-search-ordinary', function () {
+                var $obj = $(this);
+
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_ordinary'])}";
+                let $input = $('#input-search-ordinary').val();
+
+                // $obj.html('正在加载...');
+                $('.box-ordinary-act .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-ordinary-act .box-body-search').show();
+                            $('.box-ordinary-act .box-body-search-not').hide();
+
+                            $('.box-ordinary-act .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.name);
+                                $ghost.find('.btn-a').data('url', 'article?type=actnews&id=' + e.id);
+
+                                $('.box-ordinary-act .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-ordinary-act .box-body-search').hide();
+                            $('.box-ordinary-act .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 单页面
+            $(document).on('click', '#btn-search-adact', function () {
+                var $obj = $(this);
+
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_adact'])}";
+                let $input = $('#input-search-adact').val();
+
+                // $obj.html('正在加载...');
+                $('.box-adact .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-adact .box-body-search').show();
+                            $('.box-adact .box-body-search-not').hide();
+
+                            $('.box-adact .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.name);
+                                $ghost.find('.btn-a').data('url', 'article?type=adact&id=' + e.id);
+
+                                $('.box-adact .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-adact .box-body-search').hide();
+                            $('.box-adact .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 商城分类
+            $(document).on('click', '#btn-store-term-search', function () {
+                let $obj = $(this);
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_store_term'])}";
+                let $input = $('#input-store-term-search').val();
+
+                $('.box-store-term .box-body-search-not span').text($input);
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-store-term .box-body-search').show();
+                            $('.box-store-term .box-body-search-not').hide();
+                            $('.box-store-term .box-tbody').empty();
+
+                            let $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.title);
+                                $ghost.find('.btn-a').data('url', '^commodities?subID=' + e.id);
+
+                                $('.box-store-term .box-tbody').append($ghost);
+                            });
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-store-term .box-body-search').hide();
+                            $('.box-store-term .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系！', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg('保存过程发生错误，请与管理员联系！', {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 商城商品
+            $(document).on('click', '#btn-store-good-search', function () {
+                let $obj = $(this);
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_store_good'])}";
+                let $input = $('#input-store-good-search').val();
+
+                $('.box-store-good .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-store-good .box-body-search').show();
+                            $('.box-store-good .box-body-search-not').hide();
+
+                            $('.box-store-good .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.title);
+                                $ghost.find('.btn-a').data('url', '^commodity?id=' + e.id);
+
+                                $('.box-store-good .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-store-good .box-body-search').hide();
+                            $('.box-store-good .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系！', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg('保存过程发生错误，请与管理员联系！', {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 产品
+            $(document).on('click', '#btn-search-product', function () {
+                var $obj = $(this);
+
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_product'])}";
+                let $input = $('#input-search-product').val();
+
+                // $obj.html('正在加载...');
+                $('.box-product .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-product .box-body-search').show();
+                            $('.box-product .box-body-search-not').hide();
+
+                            $('.box-product .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.title);
+                                $ghost.find('.btn-a').data('url', 'article?type=product&id=' + e.id);
+
+                                $('.box-product .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-product .box-body-search').hide();
+                            $('.box-product .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+            // 全景
+            $(document).on('click', '#btn-search-panorama', function () {
+                var $obj = $(this);
+
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_panorama'])}";
+                let $input = $('#input-search-panorama').val();
+
+                // $obj.html('正在加载...');
+                $('.box-panorama .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-panorama .box-body-search').show();
+                            $('.box-panorama .box-body-search-not').hide();
+
+                            $('.box-panorama .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.title);
+                                $ghost.find('.btn-a').data('url', 'article?type=panorama&id=' + e.id);
+
+                                $('.box-panorama .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-panorama .box-body-search').hide();
+                            $('.box-panorama .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            });
+
+
+            var searchForm = function(that){
+                var $obj = that;
+                let $url = "{php echo webUrl('',['do'=>'system/dialoglink','op'=>'search_form'])}";
+                let $input = $('#input-search-form').val();
+                // $obj.html('正在加载...');
+                $('.box-form .box-body-search-not span').text($input);
+
+                $.ajax({
+                    type: "POST",
+                    url: $url,
+                    dataType: 'json',
+                    data: {
+                        keyword: $input
+                    },
+                    success: function (rs) {
+                        console.log(rs);
+
+                        if (rs.code == '0') {
+                            $('.box-form .box-body-search').show();
+                            $('.box-form .box-body-search-not').hide();
+
+                            $('.box-form .box-tbody').empty();
+
+                            var $ghost;
+                            $.each(rs.data, function (i, e) {
+                                $ghost = $('.div-clone .item').clone(true);
+                                $ghost.find('.title').text(e.name);
+                                $ghost.find('.btn-a').data('url', 'form-page?id=' + e.id);
+                                $('.box-form .box-tbody').append($ghost);
+                            });
+
+                            $obj.attr("disabled", false);
+                        } else if (rs.code == '2') {
+                            $('.box-form .box-body-search').hide();
+                            $('.box-form .box-body-search-not').show();
+                        } else {
+                            layer.msg('保存异常，请与管理员联系', {
+                                offset: '20%',
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("{$_W['slwl']['lang']['tips_submit_error']}", {
+                            offset: '20%',
+                        });
+                    }
+                });
+            }
+
+            // 表单
+             $(document).on('click', '#btn-search-form', function () {
+                searchForm($(this));
+            });
+
+
+            // 切换标签时读取数据
+            $(document).on('click', '.box-tab-my li', function () {
+                let $obj = $(this);
+                let $op = $obj.data('op');
+
+                if ($op == 'box-sys') {
+
+                // 跳转小程序
+                } else if ($op == 'box-wxapp') {
+                    $('#btn-search-wxapp').click();
+
+                // 单页面
+                } else if ($op == 'box-adact') {
+                    $('#btn-search-adact').click();
+
+                // 攻略文章
+                } else if ($op == 'box-strategy-act') {
+                    $('#btn-search-strategy').click();
+
+                // 普通文章
+                } else if ($op == 'box-ordinary-act') {
+                    $('#btn-search-ordinary').click();
+
+                // 商城分类
+                } else if ($op == 'box-store-term') {
+                    $('#btn-store-term-search').click();
+
+                // 商城商品
+                } else if ($op == 'box-store-good') {
+                    $('#btn-store-good-search').click();
+
+                // 产品
+                } else if ($op == 'box-product') {
+                    $('#btn-search-product').click();
+
+                // 全景
+                } else if ($op == 'box-panorama') {
+                    $('#btn-search-panorama').click();
+
+                // 表单
+                }else if ($op == 'box-form') {
+                    searchForm($('#btn-search-form'));
+                }
+
+            });
+
+            $(document).on('click', '.btn-a', function () {
+                let $url = $(this).data('url');
+                let $title = $(this).attr('title');
+                if($.isFunction(myShowLinkComplete)){
+                    myShowLinkComplete($url, $title);
+                }
+                // alert($(this).data('url'));
+            });
+        });
+
+    </script>
+</div>
+</body>
+</html>

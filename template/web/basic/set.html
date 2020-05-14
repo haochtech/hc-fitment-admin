@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+
+			<form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+				<div class="layui-tab layui-tab-brief" lay-filter="tab">
+					<ul class="layui-tab-title">
+						<li class="layui-this">{$_W['slwl']['lang']['set_title_tab_1']}</li>
+						<li>{$_W['slwl']['lang']['set_title_tab_2']}</li>
+					</ul>
+					<div class="layui-tab-content">
+						<!-- 基本设置 -->
+						<div class="layui-tab-item layui-show">
+							<!-- 小程序名称 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_name']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[appname]"
+										value="{$settings['appname']}" placeholder="小程序名称" />
+								</div>
+							</div>
+							<!-- logo -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_logo']}</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_field_image('options[logo]', $settings['logo']);}
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['set_logo_tips']}</div>
+								</div>
+							</div>
+							<!-- <div class="layui-form-item">
+								<label class="layui-form-label">我的-顶部背景图</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_field_image('options[ucenter]', $settings['ucenter']);}
+									<div class="layui-form-mid layui-word-aux">图片大小为 2:1 长方形</div>
+								</div>
+							</div> -->
+							<!-- 联系电话 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_tel']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[tel]" value="{$settings['tel']}" placeholder="{$_W['slwl']['lang']['set_tel_placeholder']}" />
+								</div>
+							</div>
+							<!-- 联系地址 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_address']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[address]" value="{$settings['address']}" placeholder="{$_W['slwl']['lang']['set_address_placeholder']}" />
+								</div>
+							</div>
+							<!-- 地理位置 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['coordinate']}</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_field_coordinate('map', $tmp_map)}
+								</div>
+							</div>
+							<!-- <div class="layui-form-item">
+								<label class="layui-form-label">地址，纬度</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[lat]" value="{$settings['lat']}" placeholder="如：22.2708101528" />
+									<div class="layui-form-mid layui-word-aux"><a style="color: #1E9FFF;" href="http://www.gpsspg.com/maps.htm" target="_blank">在线查询地址</a></div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">地址，经度</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[lng]" value="{$settings['lng']}" placeholder="如：113.5784017110" />
+									<div class="layui-form-mid layui-word-aux"><a style="color: #1E9FFF;" href="http://www.gpsspg.com/maps.htm" target="_blank">在线查询地址</a></div>
+								</div>
+							</div> -->
+							<!-- <div class="layui-form-item">
+								<label class="layui-form-label">公司简介</label>
+								<div class="layui-input-block">
+									<textarea name="options[intro]" placeholder="公司简介" class="layui-textarea">{$settings['intro']}</textarea>
+								</div>
+							</div> -->
+							<!-- 地图密钥 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_map_key']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[mapkey]" value="{$settings['mapkey']}" placeholder="{$_W['slwl']['lang']['set_map_key_placeholder']}" />
+								</div>
+								<div class="layui-input-block">
+									<div class="layui-form-mid layui-word-aux">
+										<div>
+											<a style="color: #1E9FFF;" href="http://lbs.qq.com/console/key.html"
+												target="_blank">{$_W['slwl']['lang']['set_map_application_tips_1']}</a>
+											<span>{$_W['slwl']['lang']['set_map_application_tips_2']}</span>
+										</div>
+										<div>
+											{$_W['slwl']['lang']['set_map_application_tips_3']}<br />
+											{$_W['slwl']['lang']['set_map_application_tips_4']}<br />
+											{$_W['slwl']['lang']['set_map_application_tips_5']}
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<!-- 其他配置 -->
+						<div class="layui-tab-item">
+							<!-- 咨询按钮状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_consult_button_status']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[consult_status]" value="1"
+										title="{$_W['slwl']['lang']['show']}"
+										{if $settings['consult_status']==1 || empty($settings['consult_status']) }checked{/if}>
+									<input type="radio" name="options[consult_status]" value="0"
+										title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['consult_status']==0 && isset($settings['consult_status']) }checked{/if}>
+								</div>
+							</div>
+							<!-- 咨询按钮图标 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_consult_button_icon']}</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_field_image('options[consult_img]', $settings['consult_img']);}
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['set_consult_button_icon_tips']}</div>
+								</div>
+							</div>
+							<!-- 默认咨询图标 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_consult_button_icon_default']}</label>
+								<div class="layui-input-block">
+									<div class="input-group " style="margin-top:.5em;">
+										<input type="hidden" name="options[consult_img_default]" value="{MODULE_URL}template/public/image/anniu.png" />
+										<img src="{MODULE_URL}template/public/image/anniu.png"
+											title="{$_W['slwl']['lang']['set_consult_button_icon_default']}"
+											class="img-responsive img-thumbnail" width="50">
+									</div>
+								</div>
+							</div>
+							<!-- 文章底部按钮-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_act_bottom_buttons_stauts']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[btn_act_bottom_status]" value="1"
+										   title="{$_W['slwl']['lang']['show']}"
+										   {if $settings['btn_act_bottom_status']=='1' }checked{/if}>
+									<input type="radio" name="options[btn_act_bottom_status]" value="0"
+										   title="{$_W['slwl']['lang']['hide']}"
+										   {if empty($settings['btn_act_bottom_status']) }checked{/if}>
+								</div>
+								<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['set_act_bottom_buttons_stauts_tips']}</div>
+							</div>
+							<!-- 文章底部按钮-报价计算按钮状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_act_bottom_buttons_calc_stauts']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[btn_act_bottom_calc_status]" value="1"
+										   title="{$_W['slwl']['lang']['show']}"
+										   {if $settings['btn_act_bottom_calc_status']=='1' }checked{/if}>
+									<input type="radio" name="options[btn_act_bottom_calc_status]" value="0"
+										   title="{$_W['slwl']['lang']['hide']}"
+										   {if empty($settings['btn_act_bottom_calc_status']) }checked{/if}>
+								</div>
+								<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['set_act_bottom_buttons_calc_stauts_tips']}</div>
+							</div>
+							<!-- 修改个人信息手机号是否可以编辑 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['set_userinfo_mobile_edit_enabled']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[mobile_edit_status]" value="1"
+											title="{$_W['slwl']['lang']['enabled']}"
+											{if $settings['mobile_edit_status']=='1' }checked{/if}>
+									<input type="radio" name="options[mobile_edit_status]" value="0"
+											title="{$_W['slwl']['lang']['disabled']}"
+											{if empty($settings['mobile_edit_status']) }checked{/if}>
+								</div>
+								<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['set_userinfo_mobile_edit_enabled_tips']}</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="layui-tab-content fixed" id="data-submit">
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="set">{$_W['slwl']['lang']['submit']}</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(set)', function(data){
+						let url = "{php echo webUrl('', ['do'=>'basic/set'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('', ['do'=>'basic/set'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

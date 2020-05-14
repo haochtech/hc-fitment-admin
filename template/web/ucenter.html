@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <div class="layui-tab layui-tab-brief" lay-filter="tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">{$_W['slwl']['lang']['color_title']}</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 个人中心设置 -->
+                        <div class="layui-tab-item layui-show">
+                            <!-- 商品收藏 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_collect_store']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_good]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_good']==1 || empty($settings['status_good']) }checked{/if}>
+                                    <input type="radio" name="options[status_good]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_good']==0 && isset($settings['status_good']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 图片收藏 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_collect_pic']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_pic]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_pic']==1 || empty($settings['status_pic']) }checked{/if}>
+                                    <input type="radio" name="options[status_pic]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_pic']==0 && isset($settings['status_pic']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 工地收藏 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_collect_site']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_site]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_site']==1 || empty($settings['status_site']) }checked{/if}>
+                                    <input type="radio" name="options[status_site]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_site']==0 && isset($settings['status_site']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 产品收藏 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_collect_product']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_product]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_product']==1 || empty($settings['status_product']) }checked{/if}>
+                                    <input type="radio" name="options[status_product]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_product']==0 && isset($settings['status_product']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 全景收藏 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_collect_panorama']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_panorama]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_panorama']==1 || empty($settings['status_panorama']) }checked{/if}>
+                                    <input type="radio" name="options[status_panorama]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_panorama']==0 && isset($settings['status_panorama']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 我的订单 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_order_my']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_order]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_order']==1 || empty($settings['status_order']) }checked{/if}>
+                                    <input type="radio" name="options[status_order]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_order']==0 && isset($settings['status_order']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 我的地址 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_address_my']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_address]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_address']==1 || empty($settings['status_address']) }checked{/if}>
+                                    <input type="radio" name="options[status_address]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_address']==0 && isset($settings['status_address']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 我的优惠券 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_sale_my']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_coupon]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_coupon']==1 || empty($settings['status_coupon']) }checked{/if}>
+                                    <input type="radio" name="options[status_coupon]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_coupon']==0 && isset($settings['status_coupon']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 我的预约 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_reserve_my']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_reserve]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_reserve']==1 || empty($settings['status_reserve']) }checked{/if}>
+                                    <input type="radio" name="options[status_reserve]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_reserve']==0 && isset($settings['status_reserve']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 联系客服 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['ucenter_client_service_center']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_consult]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}" {if $settings['status_consult']==1 || empty($settings['status_consult']) }checked{/if}>
+                                    <input type="radio" name="options[status_consult]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}" {if $settings['status_consult']==0 && isset($settings['status_consult']) }checked{/if}>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-content fixed" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="ucenter">{$_W['slwl']['lang']['submit']}</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(ucenter)', function(data){
+                        let url = "{php echo webUrl('ucenter')}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('ucenter')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+
+                    $(document).on('click', '.layui-form-item.style .one-style', function () {
+                       $('#style-value').val($(this).attr('data-val'));
+                       $(this).siblings('.active').removeClass('active');
+                       $(this).addClass('active');
+                   })
+                });
+            </script>
+
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

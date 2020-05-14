@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <div class="layui-tab layui-tab-brief" lay-filter="tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">{$_W['slwl']['lang']['color_title']}</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 颜色配置 -->
+                        <!-- 顶部背景颜色 -->
+                        <div class="layui-form-item layui-show">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_top_backgound']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[topcolor]', $settings['topcolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 顶部字体颜色 -->
+                        <div class="layui-form-item layui-show">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_top_font']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[topfontcolor]', $settings['topfontcolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 主体颜色值 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_main']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[maincolor]', $settings['maincolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 副颜色值 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_sub']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[subcolor]', $settings['subcolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 按钮1颜色值 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_button_1']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[btncolor]', $settings['btncolor']);}
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['color_button_1_tips']}</div>
+                            </div>
+                        </div>
+                        <!-- 按钮2颜色值 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_button_2']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[btn2color]', $settings['btn2color']);}
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['color_button_2_tips']}</div>
+                            </div>
+                        </div>
+                        <!-- 底部背景颜色 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_bottom_backgound']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[bottomcolor]', $settings['bottomcolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 底部字体颜色 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_bottom_backgound_font']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[bottomfontcolor]', $settings['bottomfontcolor']);}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 底部高亮颜色 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">{$_W['slwl']['lang']['color_bottom_backgound_highlight']}</label>
+                            <div class="layui-input-block">
+                                <div style="width: 50%;">
+                                    {php echo slwl_tpl_form_field_color('options[bottomfonthovercolor]', $settings['bottomfonthovercolor']);}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-content" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="color">{$_W['slwl']['lang']['submit']}</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(color)', function(data){
+                        let url = "{php echo webUrl('color')}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('color')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

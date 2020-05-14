@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li {if $operation=='display' } class="layui-this" {/if}>
+                        <a href="{php echo $this->createWebUrl('site_list',array('op' =>'display'))}">工地列表</a>
+                    </li>
+                    <li {if empty($one['id']) && $operation == 'post'} class="layui-this" {/if}>
+                        <a href="{php echo $this->createWebUrl('site_list',array('op' =>'post'))}">添加</a>
+                    </li>
+                    {if $one['id'] && $operation == 'post'}
+                    <li class="layui-this">
+                        <a href="{php echo $this->createWebUrl('site_list',array('op' =>'post','id'=>$one['id']))}">编辑</a>
+                    </li>
+                    {/if}
+
+                    {if $site_id && ($operation == 'site_dy' || $operation == 'post_site_dy')}
+                    <li {if $operation == 'site_dy'} class="layui-this" {/if}>
+                        <a href="{php echo $this->createWebUrl('site_list', array('op' =>'site_dy','sid'=>$site_id))}">动态</a>
+                    </li>{/if}
+                    {if $site_id && ($operation == 'site_dy' || $operation == 'post_site_dy')}
+                    <li {if empty($one['id']) && $operation == 'post_site_dy'} class="layui-this" {/if}>
+                        <a href="{php echo $this->createWebUrl('site_list',array('op' =>'post_site_dy','sid'=>$site_id))}">添加</a>
+                    </li>{/if}
+                    {if $site_id && $one['id'] && $operation == 'post_site_dy'}
+                    <li class="layui-this">
+                        <a href="{php echo $this->createWebUrl('site_list',array('op' =>'post_site_dy','id'=>$one['id'],'sid'=>$site_id))}">编辑</a>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+
+        {if $operation == 'display'}
+            <div class="box-tools">
+                <div class="box-search">
+                    <form action="{php echo $this->createWebUrl('site_list')}" method="post">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" value="{$keyword}" class="layui-input" placeholder="标题">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="">搜索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>排序</th>
+                            <th>标题</th>
+                            <th>小区</th>
+                            <th>地址</th>
+                            <th>可见</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $status_enabled = array('0'=>'禁用','1'=>'启用'); }
+                        {php $status_visible = array('0'=>'公开','1'=>'私有'); }
+                        {loop $list $item}
+                        <tr>
+                            <td class="wmin20">{$item['id']}</td>
+                            <td class="wmin30">{$item['displayorder']}</td>
+                            <td class="td-content">{$item['title']}</td>
+                            <td>{$item['subdistrict_cn']}</td>
+                            <td>{$item['address']}</td>
+                            <td>{$status_visible[$item['visible']]}</td>
+                            <td class="wmin30">{$status_enabled[$item['enabled']]}</td>
+                            <td class="td-button w180">
+                                <a href="{php echo $this->createWebUrl('site_list', array('op'=>'site_dy', 'sid'=>$item['id']))}"
+                                    class="layui-btn layui-btn-normal layui-btn-sm" title="动态管理">动态</a>
+                                <a href="{php echo $this->createWebUrl('site_list', array('op'=>'post', 'id'=>$item['id']))}"
+                                    class="layui-btn layui-btn-normal layui-btn-sm" title="修改">修改</a>
+                                <a href="javascript:;"
+                                    class="layui-btn layui-btn-danger layui-btn-sm btn-del" data-id="{$item['id']}" title="删除">删除</a>
+                            </td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use(['laypage', 'layer'], function(){
+                    var laypage = layui.laypage;
+                    var layer = layui.layer;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo $this->createWebUrl('site_list')}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+
+                    // 删除
+                    $('.btn-del').click(function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm('确定要删除吗？', {
+                            offset: '20%',
+                            btn: ['再想想', '删除'],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo $this->createWebUrl('site_list', array('op'=>'delete'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg('提交过程发生错误，请与管理员联系' , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+
+                });
+            </script>
+
+
+        {elseif $operation == 'post'}
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <div class="layui-tab-content">
+                    <!-- 添加或编辑 -->
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="enabled" value="1" title="启用" {if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+                                <input type="radio" name="enabled" value="0" title="禁用" {if $one['enabled']==0 && $one['id'] }checked{/if}>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="displayorder" value="{$one['displayorder']}" placeholder="数字越大，排名越靠前">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工地名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="title" lay-verify="required" value="{$one['title']}" placeholder="给工地起个响亮的名字吸引更多人围观(30字符之内)">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">项目编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="project_code" lay-verify="required" value="{$one['project_code']}" placeholder="可输入合同编号或客户手机号(20字符之内)">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所属小区</label>
+                            <div class="layui-input-block">
+                                <select name="site_id" lay-verify="required">
+                                    <option value="">请选择...</option>
+                                    {loop $list_subdistrict $item}
+                                    <option value="{$item['id']}" {if $item['id']==$one['site_id']}selected{/if}>{$item['title']}</option>
+                                    {/loop}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">地理位置</label>
+                            <div class="layui-input-block">
+                                {php echo slwl_tpl_form_field_coordinate('map', $tmp_map)}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="address" lay-verify="required" value="{$one['address']}" placeholder="如：珠海市香洲区凤凰北路1008号">
+                            </div>
+                        </div>
+                        <!-- <div class="layui-form-item">
+                            <label class="layui-form-label">可见状态</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="visible" value="0" title="公开" {if $one['visible']==0}checked{/if}>
+                                <input type="radio" name="visible" value="1" title="私有" {if $one['visible']==1}checked{/if}>
+                            </div>
+                        </div> -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">图片</label>
+                            <div class="layui-input-block">
+                                {php echo slwl_tpl_form_field_image('thumb', $one['thumb']);}
+                                <div class="layui-form-mid layui-word-aux">图片推荐 750 X 300 像素，宽度 100% 高度自适应</div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">装修预算</label>
+                            <div class="layui-input-block">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input left" name="budget" lay-verify="required"
+                                        value="{$one['budget_format']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">元</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">浏览数</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="view_count" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+                                    value="{$one['view_count']}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">收藏数</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="fav_count" min="1" oninput="if(value.length>8)value=value.slice(0,8)"
+                                    value="{$one['fav_count']}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">户型</label>
+                            <div class="layui-input-inline w200">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input center" name="house_type[room]" lay-verify="required"
+                                        value="{$one['house_type_format']['room']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">室</span>
+                                </div>
+                            </div>
+                            <div class="layui-input-inline w200">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input center" name="house_type[hall]" lay-verify="required"
+                                        value="{$one['house_type_format']['hall']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">厅</span>
+                                </div>
+                            </div>
+                            <div class="layui-input-inline w200">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input center" name="house_type[kitchen]" lay-verify="required"
+                                        value="{$one['house_type_format']['kitchen']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">厨</span>
+                                </div>
+                            </div>
+                            <div class="layui-input-inline w200">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input center" name="house_type[toilet]" lay-verify="required"
+                                        value="{$one['house_type_format']['toilet']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">卫</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">面积</label>
+                            <div class="layui-input-block">
+                                <div class="input-group form-group">
+                                    <input type="number" class="layui-input left" name="area" lay-verify="required" placeholder="如：100 "
+                                        value="{$one['area']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+                                    <span class="input-group-addon pad-trim-10">㎡</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工地进度</label>
+                            <div class="layui-input-block">
+                                {loop $list_progress $index $item}
+                                    <input type="radio" name="options[site_progress]" value="a{$item['id']}" title="{$item['title']}"
+                                        {if $index==0 || $item['checked']=='1'}checked{/if}>
+                                {/loop}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工地房型</label>
+                            <div class="layui-input-block">
+                                {loop $list_type $index $item}
+                                    <input type="checkbox" name="options[site_type][]" value="b{$item['id']}" title="{$item['title']}"
+                                        lay-skin="primary" {if $item['checked']=='1'}checked{/if}>
+                                {/loop}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">装修风格</label>
+                            <div class="layui-input-block">
+                                {loop $list_style $index $item}
+                                    <input type="checkbox" name="options[site_style][]" value="c{$item['id']}" title="{$item['title']}"
+                                        lay-skin="primary" {if $item['checked']=='1'}checked{/if}>
+                                {/loop}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">装修方式</label>
+                            <div class="layui-input-block">
+                                {loop $list_mode $index $item}
+                                    <input type="radio" name="options[site_mode]" value="d{$item['id']}" title="{$item['title']}"
+                                        {if $index==0 || $item['checked']=='1'}checked{/if}>
+                                {/loop}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-content fixed" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="sitelist">提交</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(sitelist)', function(data){
+                        let url = "{php echo $this->createWebUrl('site_list', array('op'=>'post'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('保存成功' , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo $this->createWebUrl('site_list')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg('提交过程发生错误，请与管理员联系' , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'site_dy'}
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <colgroup>
+                        <col width="50">
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col width="200">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>排序</th>
+                            <th>标题</th>
+                            <th>进度</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $this_statuses = array('0'=>'禁用','1'=>'启用'); }
+                        {loop $list $item}
+                        <tr>
+                            <td>{$item['id']}</td>
+                            <td>{$item['displayorder']}</td>
+                            <td>{$item['title']}</td>
+                            <td>{$item['id_title']}</td>
+                            <td>{$this_statuses[$item['enabled']]}</td>
+                            <td style="text-align:left;">
+                                <a href="{php echo $this->createWebUrl('site_list', array('op'=>'post_site_dy', 'id'=>$item['id'], 'sid'=>$item['site_id']))}"
+                                    class="layui-btn layui-btn-normal" title="编辑">编辑</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$item['id']}" title="删除">删除</a>
+                            </td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use(['laypage', 'layer'], function(){
+                    var laypage = layui.laypage;
+                    var layer = layui.layer;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo $this->createWebUrl('site_list')}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+
+                    // 删除
+                    $('.btn-del').click(function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm('确定要删除吗？', {
+                            offset: '20%',
+                            btn: ['再想想', '删除'],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo $this->createWebUrl('site_list', array('op'=>'delete_site_dy'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg('提交过程发生错误，请与管理员联系' , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'post_site_dy'}
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <input type="hidden" name="sid" value="{$site_id}" />
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="enabled" value="1" title="启用" {if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+                                <input type="radio" name="enabled" value="0" title="禁用" {if $one['enabled']==0 && $one['id'] }checked{/if}>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工地进度</label>
+                            <div class="layui-input-block">
+                                {loop $list_progress $index $item}
+                                    <input type="radio" name="site_progress" value="{$item['id']}" title="{$item['title']}"
+                                        {if $index==0 || $item['checked']=='1'}checked{/if}>
+                                {/loop}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="displayorder" value="{$one['displayorder']}" class="layui-input" placeholder="数字越大，排名越靠前">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" lay-verify="required" value="{$one['title']}" class="layui-input" placeholder="请输入标题">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">简介</label>
+                            <div class="layui-input-block">
+                                <textarea name="intro" placeholder="简介" class="layui-textarea">{$one['intro']}</textarea>
+                            </div>
+                        </div>
+                        <!-- <div class="layui-form-item">
+                            <label class="layui-form-label">图片</label>
+                            <div class="layui-input-block">
+                                {php echo slwl_tpl_form_field_image('thumb', $one['thumb']);}
+                                <div class="layui-form-mid layui-word-aux">图片大小推荐为 750 * 310 像素</div>
+                            </div>
+                        </div> -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">其他图片</label>
+                            <div class="layui-input-block">
+                                {php echo slwl_tpl_form_field_multi_image('thumbs', $thumbs)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-content fixed" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="post_site_dy">提交</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(post_site_dy)', function(data){
+                        let url = "{php echo $this->createWebUrl('site_list', array('op'=>'post_site_dy'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('保存成功' , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo $this->createWebUrl('site_list', array('op'=>'site_dy','sid'=>$site_id))}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg('提交过程发生错误，请与管理员联系' , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                });
+            </script>
+
+
+        {/if}
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

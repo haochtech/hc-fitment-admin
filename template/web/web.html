@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+    <style type="text/css">
+        html { background-color: #f2f2f2; }
+        .box-panel { max-width: 1100px; padding-top: 20px; }
+        .box-row-panel { padding: 15px; }
+        .box-row-panel .box-item { display: none; }
+        .box-row-panel .box-item.active { display: block; }
+        .box-row-panel .box-item .layui-col-xs4 .box-border-1 { border: 1px solid rgba(66, 139, 202, .1); margin: 3px; }
+        .box-row-panel .box-item .layui-col-xs4 .box-border-2 { border: 1px solid rgba(66, 139, 202, .3); margin: 3px; }
+        .box-row-panel .box-item .layui-col-xs4 .box-border { color: #666; border: 2px solid rgba(66, 139, 202, .6); margin: 3px; text-align: center; height: 62px; }
+        .box-row-panel .box-item .layui-col-xs4 .box-border h3 { font-size: 16px; height: 32px; line-height: 32px; }
+        .box-row-panel .box-item .layui-col-xs4 .box-border p { font-size: 12px; height: 30px; line-height: 30px; }
+        #trafficFlowBoxNow { width: 100%; height: 300px; }
+    </style>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left' }
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="box-panel layui-row layui-col-space15">
+                <div class="layuicol-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">系统信息</div>
+                        <div class="layui-card-body layui-text">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="140">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td>PHP版本</td>
+                                        <td>{$_W['slwl']['system']['ver_php']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MYSQL版本</td>
+                                        <td>{$_W['slwl']['system']['ver_mysql']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>程序版本</td>
+                                        <td>{SLWL_VERSION}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>程序ID</td>
+                                        <td>{$_W['uniacid']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>APPID</td>
+                                        <td>{$app_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>网站URL</td>
+                                        <td>{$_W['slwl']['domain']['https_url']}app/index.php</td>
+                                    </tr>
+                                    <tr>
+                                        <td>页面路径</td>
+                                        <td>pages/index/index</td>
+                                    </tr>
+                                    {if $_W['role']=='founder'}
+                                    <tr>
+                                        <td>使用教程</td>
+                                        <td>
+                                            <a style="color: #1E9FFF;" href="https://www.kancloud.cn/zhshenlan/slwl_fitment/870426"
+                                                target="_blank">点击查看</a>
+                                        </td>
+                                    </tr>
+                                    {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

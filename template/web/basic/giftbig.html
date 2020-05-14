@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li {if $operation == 'display'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'module/giftbig'])}">新人大礼包</a>
+					</li>
+					<li {if $operation == 'set'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'module/giftbig','op' =>'set'])}">配置</a>
+					</li>
+					{if $one['id'] && $operation == 'post'}
+					<li class="layui-this">
+						<a href="{php echo webUrl('',['do'=>'module/giftbig','op'=>'post','id'=>$one['id']])}">编辑</a>
+					</li>
+					{/if}
+				</ul>
+			</div>
+
+		{if $operation == 'display'}
+			<div class="layui-form">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>姓名</th>
+							<th>联系方式</th>
+							<th>内容</th>
+							<th>状态</th>
+							<th>时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{php $this_statuses = array('0'=>'未处理','1'=>'已处理'); }
+						{loop $list $item}
+						<tr>
+							<td class="wmin20">{$item['id']}</td>
+							<td class="td-content">{$item['name']}</td>
+							<td>{$item['mobile']}</td>
+							<td>{$item['mark']}</td>
+							<td>{$this_statuses[$item['enabled']]}</td>
+							<td>{$item['addtime']}</td>
+							<td class="td-button">
+								<a href="{php echo webUrl('',['do'=>'module/giftbig','op'=>'post','id'=>$item['id']])}" class="layui-btn" title="修改">修改</a>
+								<a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$item['id']}" title="删除">删除</a>
+							</td>
+						</tr>
+						{/loop}
+					</tbody>
+				</table>
+				<div class="pager">
+					{$pager}
+				</div>
+			</div>
+
+			<script>
+				// 分页
+				layui.use('laypage', function(){
+					var laypage = layui.laypage;
+
+					laypage.render({
+						elem: $('.pager')
+						,limit: '{php echo $psize; }'
+						,count: '{php echo $total; }'
+						,theme: '#1E9FFF'
+						,curr:  '{php echo $pindex; }'
+						,hash: '{php echo $pindex; }'
+						,jump: function (obj, first) {
+							if (first != true) {
+								var currentPage = obj.curr; //获取点击的页码
+								window.location.href = "{php echo webUrl('',['do'=>'module/giftbig'])}&page=" + currentPage;
+							}
+						}
+					});
+				});
+				$(function () {
+					$('.pager').show();
+				});
+			</script>
+			<script>
+				layui.use('layer', function(){
+					var layer = layui.layer;
+
+					// 删除
+					$(document).on('click', '.btn-del', function () {
+						$obj = $(this);
+						$del_id = $obj.data('id');
+						layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+							offset: '20%',
+							btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+							scrollbar: false,
+							closeBtn: 0,
+						}, function (i) {
+						   layer.close(i);
+						}, function (i) {
+							let $url = "{php echo webUrl('',['do'=>'module/giftbig','op'=>'delete'])}";
+
+							$.ajax({
+								type: "POST",
+								url: $url,
+								dataType: 'json',
+								data: {
+									id: $del_id
+								},
+								success: function (rs) {
+									console.log(rs);
+									if (rs.code == '0') {
+										layer.msg('删除成功', {
+											time: 500
+										},
+										function () {
+											$obj.closest('tr').fadeOut(200, function () {
+												$obj.remove();
+											});
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+										$obj.removeClass('lock');
+									}
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						});
+					});
+				});
+			</script>
+
+		{elseif $operation == 'set'}
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>配置</legend>
+			</fieldset>
+			<form class="layui-form" action="" method="post" enctype="multipart/form-data">
+				<div class="layui-form-item">
+					<label class="layui-form-label">活动图片</label>
+					<div class="layui-input-block">
+						{php echo slwl_tpl_form_field_image('options[thumb]', $settings['thumb']);}
+						<div class="layui-form-mid layui-word-aux">图片大小为 3:1 长方形</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">提交图片</label>
+					<div class="layui-input-block">
+						{php echo slwl_tpl_form_field_image('options[thumb_post]', $settings['thumb_post']);}
+						<div class="layui-form-mid layui-word-aux">图片大小为 1:1 正方形或 2:1 长方形</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="set">保存</button>
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(set)', function(data){
+						let url = "{php echo webUrl('',['do'=>'module/giftbig','op'=>'set'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'module/giftbig','op'=>'set'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+		{elseif $operation == 'post'}
+			<form class="layui-form" action="" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="id" value="{$one['id']}" />
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-block">
+						<input type="radio" name="enabled" value="1" title="启用" {if $one['enabled']==1 || empty($one['id']) }checked{/if}>
+						<input type="radio" name="enabled" value="0" title="禁用" {if $one['enabled']==0 && $one['id'] }checked{/if}>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">备注</label>
+					<div class="layui-input-block">
+						<textarea name="msg" placeholder="备注" class="layui-textarea">{$one['msg']}</textarea>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="giftbig">保存</button>
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(giftbig)', function(data){
+						let url = "{php echo webUrl('',['do'=>'module/giftbig','op'=>'post'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'module/giftbig'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+						return false;
+					});
+				});
+			</script>
+		{/if}
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

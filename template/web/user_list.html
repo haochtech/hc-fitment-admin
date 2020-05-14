@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li {if $operation == 'display'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('user_list',array('op' =>'display'))}">{$_W['slwl']['lang']['user_list_title_tab']}</a>
+                    </li>
+                </ul>
+            </div>
+
+        {if $operation == 'display'}
+            <div class="box-tools">
+                <div class="box-search">
+                    <form action="{php echo webUrl('user_list')}" method="post">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" value="{$keyword}" class="layui-input"
+                                placeholder="{$_W['slwl']['lang']['nickname']}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="">{$_W['slwl']['lang']['search']}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{$_W['slwl']['lang']['avatar']}</th>
+                            <th>{$_W['slwl']['lang']['gender']}</th>
+                            <th>{$_W['slwl']['lang']['nickname']}</th>
+                            <th>{$_W['slwl']['lang']['tel']}</th>
+                            <th>{$_W['slwl']['lang']['create_time']}</th>
+                            <!-- <th>操作</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $this_gender = array(
+                            '0'=>$_W['slwl']['lang']['gender_unknown'],
+                            '1'=>$_W['slwl']['lang']['gender_boy'],
+                            '2'=>$_W['slwl']['lang']['gender_girl']
+                        ); ?>
+                        {loop $list $item}
+                        <tr>
+                            <td class="wmin20">{$item['id']}</td>
+                            <td>
+                                <div class="box-table-img">
+                                    <img src="{$item['avatar']}" data-url="{$item['avatar']}" >
+                                </div>
+                            </td>
+                            <td>{$this_gender[$item['gender']]}</td>
+                            <td>{php echo json_decode($item['nicename'])}</td>
+                            <td>{$item['mobile']}</td>
+                            <td>{$item['addtime']}</td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use('laypage', function(){
+                    var laypage = layui.laypage;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo webUrl('user_list')}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+                });
+            </script>
+
+
+        {/if}
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

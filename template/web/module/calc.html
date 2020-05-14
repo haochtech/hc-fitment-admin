@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+	<style type="text/css">
+		.layui-input-inline.w300 { width: 300px; }
+	</style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+				<div class="layui-tab layui-tab-brief" lay-filter="tab">
+					<ul class="layui-tab-title">
+						<li class="layui-this">{$_W['slwl']['lang']['calc_title_tab']}</li>
+					</ul>
+					<div class="layui-tab-content">
+						<!-- 计算器配置 -->
+						<div class="layui-tab-item layui-show">
+							<!-- 图片 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_ad_pic']}</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_field_image('options[thumb]', $settings['thumb']);}
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['calc_ad_pic_tips']}</div>
+								</div>
+							</div>
+							<!-- 动作 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['action']}</label>
+								<div class="layui-input-block">
+									{php echo slwl_tpl_form_show_link('options[page_url]', $settings['page_url']);}
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['action_tips']}</div>
+								</div>
+							</div>
+							<!-- 基础价格 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_min_price']}</label>
+								<div class="layui-input-block">
+									<input type="number" class="layui-input" name="options[min_price]"
+										value="{$settings['min_price']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+								</div>
+							</div>
+							<!-- 单价 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_square_price']}</label>
+								<div class="layui-input-block">
+									<input type="number" class="layui-input" name="options[square_price]"
+										value="{$settings['square_price']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+								</div>
+							</div>
+							<!-- 材料费-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_stuff_cost_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[stuff_cost_title]" value="{$settings['stuff_cost_title']}"
+										placeholder="{$_W['slwl']['lang']['calc_stuff_cost_title']}" />
+								</div>
+							</div>
+							<!-- 材料费 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_stuff_cost']}</label>
+								<div class="layui-input-block">
+									<input type="number" class="layui-input" name="options[stuff_cost]" value="{$settings['stuff_cost']}" min="1"
+										oninput="if(value.length>8)value=value.slice(0,8)" />
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['calc_stuff_cost_tips']}</div>
+								</div>
+							</div>
+							<!-- 人工费-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_labour_cost_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[labour_cost_title]" value="{$settings['labour_cost_title']}"
+										placeholder="{$_W['slwl']['lang']['calc_labour_cost_title']}" />
+								</div>
+							</div>
+							<!-- 人工费 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_labour_cost']}</label>
+								<div class="layui-input-block">
+									<input type="number" class="layui-input" name="options[labour_cost]" value="{$settings['labour_cost']}" min="1"
+										oninput="if(value.length>8)value=value.slice(0,8)" />
+									<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['calc_labour_cost_tips']}</div>
+								</div>
+							</div>
+							<!-- 设计费-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_style_cost_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[style_cost_title]" value="{$settings['style_cost_title']}"
+										placeholder="{$_W['slwl']['lang']['calc_style_cost_title']}" />
+								</div>
+							</div>
+							<!-- 设计费 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_style_cost_title']}</label>
+								<div class="layui-input-inline w300">
+									<div class="input-group form-group">
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['calc_market_price']}</span>
+										<input type="number" class="layui-input center" name="options[style_cost_market]"
+											value="{$settings['style_cost_market']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['yuan']}</span>
+									</div>
+								</div>
+								<div class="layui-input-inline w300">
+									<div class="input-group form-group">
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['calc_original_price']}</span>
+										<input type="number" class="layui-input center" name="options[style_cost_original]"
+											value="{$settings['style_cost_original']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['yuan']}</span>
+									</div>
+								</div>
+							</div>
+							<!-- 质检费-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_qt_cost_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[qt_cost_title]" value="{$settings['qt_cost_title']}"
+										placeholder="{$_W['slwl']['lang']['calc_qt_cost_title']}" />
+								</div>
+							</div>
+							<!-- 质检费 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_min_price']}</label>
+								<div class="layui-input-inline w300">
+									<div class="input-group form-group">
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['calc_market_price']}</span>
+										<input type="number" class="layui-input center" name="options[qt_cost_market]"
+											value="{$settings['qt_cost_market']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['yuan']}</span>
+									</div>
+								</div>
+								<div class="layui-input-inline w300">
+									<div class="input-group form-group">
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['calc_original_price']}</span>
+										<input type="number" class="layui-input center" name="options[qt_cost_original]"
+											value="{$settings['qt_cost_original']}" min="1" oninput="if(value.length>8)value=value.slice(0,8)" />
+										<span class="input-group-addon pad-trim-10">{$_W['slwl']['lang']['yuan']}</span>
+									</div>
+								</div>
+							</div>
+							<!-- 单位 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_unit']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[unit]" value="{$settings['unit']}"
+										placeholder="{$_W['slwl']['lang']['calc_unit_plactholder']}" />
+								</div>
+							</div>
+							<!-- 说明 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['calc_info']}</label>
+								<div class="layui-input-block">
+									<div style="line-height: 28px;">
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_1']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_2']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_3']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_4']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_5']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_6']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_7']}</div>
+										<div class="layui-word-aux">{$_W['slwl']['lang']['calc_info_8']}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="layui-tab-content fixed" id="data-submit">
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="calc">{$_W['slwl']['lang']['submit']}</button>
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+
+
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(calc)', function(data){
+						let url = "{php echo webUrl('', ['do'=>'module/calc'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('', ['do'=>'module/calc'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+											shift: 6,
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+										offset: '20%',
+										shift: 6,
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

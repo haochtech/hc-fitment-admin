@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li {if $operation == 'display'} class="layui-this" {/if}>
+						<a href="{php echo webUrl('',['do'=>'store/printer'])}">{$_W['slwl']['lang']['store_printer_title_1']}</a>
+					</li>
+				</ul>
+			</div>
+
+		{if $operation == 'display'}
+			<form class="layui-form" action="" method="post" enctype="multipart/form-data">
+				<!-- 状态 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+					<div class="layui-input-block">
+						<input type="radio" name="enabled" value="1" title="{$_W['slwl']['lang']['enabled']}"
+							{if $set['enabled']==1 }checked{/if}>
+						<input type="radio" name="enabled" value="0" title="{$_W['slwl']['lang']['disabled']}"
+							{if $set['enabled']==0 }checked{/if}>
+					</div>
+				</div>
+				<!-- 终端号 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_printer_1_name']}</label>
+					<div class="layui-input-block">
+						<input type="text" name="options[machine_code]" value="{$printers['machine_code']}" class="layui-input">
+						<!-- <div class="layui-form-mid layui-word-aux">打印机终端号</div> -->
+					</div>
+				</div>
+				<!-- 密钥 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_printer_1_key']}</label>
+					<div class="layui-input-block">
+						<input type="text" name="options[msign]" value="{$printers['msign']}" class="layui-input">
+						<!-- <div class="layui-form-mid layui-word-aux">打印机终端密钥</div> -->
+					</div>
+				</div>
+				<!-- 用户ID -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_printer_1_uid']}</label>
+					<div class="layui-input-block">
+						<input type="text" name="options[partner]" value="{$printers['partner']}" class="layui-input">
+						<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['store_printer_1_uid_tips']}</div>
+					</div>
+				</div>
+				<!-- apiKey -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_printer_1_apikey']}</label>
+					<div class="layui-input-block">
+						<input type="text" name="options[apikey]" value="{$printers['apikey']}" class="layui-input">
+						<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['store_printer_1_apikey_tips']}</div>
+					</div>
+				</div>
+				<!-- URL -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">URL</label>
+					<div class="layui-input-block">
+						<input type="text" name="options[url]" value="{$printers['url']}" class="layui-input">
+						<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['store_printer_1_url_tips']}</div>
+					</div>
+				</div>
+				<!-- 打印选项 -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">{$_W['slwl']['lang']['store_printer_1_print_options']}</label>
+					<div class="layui-input-block">
+						<div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['store_printer_1_print_options_tips']}</div>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="printer">{$_W['slwl']['lang']['submit']}</button>
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(printer)', function(data){
+						let url = "{php echo webUrl('',['do'=>'store/printer','op'=>'post'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg('保存成功！' , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'store/printer'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg('保存过程发生错误，请与管理员联系', {
+										offset: '20%',
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+
+		{/if}
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

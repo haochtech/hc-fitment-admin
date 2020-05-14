@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$_W['slwl']['lang']['sys_name']}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="">
+	{template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+	{template 'public/top'}
+	{template 'public/left'}
+
+	<div class="layui-body">
+		<div class="layui-main">
+
+			<form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+				<div class="layui-tab layui-tab-brief" lay-filter="tab">
+					<ul class="layui-tab-title">
+						<li class="layui-this">{$_W['slwl']['lang']['store_default_title_tab']}</li>
+					</ul>
+					<div class="layui-tab-content">
+						<!-- 导航按钮组 -->
+						<div class="layui-tab-item layui-show">
+							<!-- 轮播图-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_adv']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[adv_show]" value="1" title="{$_W['slwl']['lang']['show']}"
+										{if $settings['adv_show']==1 }checked{/if}>
+									<input type="radio" name="options[adv_show]" value="0" title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['adv_show']==0 }checked{/if}>
+								</div>
+							</div>
+							<!-- 轮播图-高度 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_adv_height']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[banner_height]" value="{$settings['banner_height']}"
+										placeholder="{$_W['slwl']['lang']['store_default_adv_height_tips']}" />
+								</div>
+							</div>
+							<!-- 组合广告-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_adgroup']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[adgroup_show]" value="1" title="{$_W['slwl']['lang']['show']}"
+										{if $settings['adgroup_show']==1 }checked{/if}>
+									<input type="radio" name="options[adgroup_show]" value="0" title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['adgroup_show']==0 }checked{/if}>
+								</div>
+							</div>
+							<!-- 首页广告-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_adsp']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[adsp_show]" value="1" title="{$_W['slwl']['lang']['show']}"
+										{if $settings['adsp_show']==1 }checked{/if}>
+									<input type="radio" name="options[adsp_show]" value="0" title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['adsp_show']==0 }checked{/if}>
+								</div>
+							</div>
+							<!-- <div class="layui-form-item">
+								<label class="layui-form-label">品牌商-状态</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[brand_show]" value="1" title="显示" {if $settings['brand_show']==1}checked{/if}>
+									<input type="radio" name="options[brand_show]" value="0" title="隐藏" {if $settings['brand_show']==0}checked{/if}>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">品牌商-标题</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[brandtitle]" value="{$settings['brandtitle']}" placeholder="品牌商-自定义" />
+								</div>
+							</div> -->
+							<!-- 新品首发-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_newgood']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[newgoods_status]" value="1" title="{$_W['slwl']['lang']['show']}"
+										{if $settings['newgoods_status']==1 }checked{/if}>
+									<input type="radio" name="options[newgoods_status]" value="0" title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['newgoods_status']==0 }checked{/if}>
+								</div>
+							</div>
+							<!-- 新品首发-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_newgood_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[inewtitle]" value="{$settings['inewtitle']}"
+										placeholder="{$_W['slwl']['lang']['store_default_newgood_title']}" />
+								</div>
+							</div>
+							<!-- 人气推荐-状态 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_hotgood']}</label>
+								<div class="layui-input-block">
+									<input type="radio" name="options[hotgoods_status]" value="1" title="{$_W['slwl']['lang']['show']}"
+										{if $settings['hotgoods_status']==1 }checked{/if}>
+									<input type="radio" name="options[hotgoods_status]" value="0" title="{$_W['slwl']['lang']['hide']}"
+										{if $settings['hotgoods_status']==0 }checked{/if}>
+								</div>
+							</div>
+							<!-- 人气推荐-标题 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['store_default_hotgood_title']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[ihottitle]" value="{$settings['ihottitle']}"
+										placeholder="{$_W['slwl']['lang']['store_default_hotgood_title']}" />
+								</div>
+							</div>
+							<!-- 更多 -->
+							<div class="layui-form-item">
+								<label class="layui-form-label">{$_W['slwl']['lang']['more']}</label>
+								<div class="layui-input-block">
+									<input type="text" class="layui-input" name="options[titlemore]" value="{$settings['titlemore']}"
+										placeholder="{$_W['slwl']['lang']['more_placeholder']}" />
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" lay-submit lay-filter="default">{$_W['slwl']['lang']['submit']}</button>
+									<input type="hidden" name="token" value="{$_W['token']}" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script>
+				layui.use('form', function(){
+					var form = layui.form;
+
+					form.on('submit(default)', function(data){
+						let url = "{php echo webUrl('',['do'=>'store/default'])}";
+						var $obj = $(this);
+
+						if (!$obj.hasClass('lock')) {
+							$obj.addClass('lock'); // 不能再点击
+
+							$.ajax({
+								type: "POST",
+								url: url,
+								dataType: 'json',
+								data: data.field,
+								success: function (rs) {
+									console.log(rs.code);
+									if (rs.code == '0') {
+										layer.msg('保存成功！' , {
+											time: 500
+										}, function () {
+											window.location.href = "{php echo webUrl('',['do'=>'store/default'])}";
+										});
+									} else {
+										layer.msg(rs.msg, {
+											offset: '20%',
+										});
+									}
+									$obj.removeClass('lock');
+								},
+								error: function () {
+									layer.msg('保存过程发生错误，请与管理员联系', {
+										offset: '20%',
+									});
+									$obj.removeClass('lock');
+								}
+							});
+						}
+
+						return false;
+					});
+				});
+			</script>
+
+		</div>
+	</div>
+
+	{template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

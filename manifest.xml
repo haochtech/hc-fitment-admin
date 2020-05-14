@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.zx-xcx.com" versionCode="0.6">
+	<application setting="false">
+		<name><![CDATA[装修小程序]]></name>
+		<identifie><![CDATA[slwl_fitment]]></identifie>
+		<version><![CDATA[2.9.1]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[装修小程序]]></ability>
+		<description><![CDATA[装修小程序]]></description>
+		<author><![CDATA[智享工场]]></author>
+		<url><![CDATA[https://zx-xcx.com]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports><item type="wxapp" /></supports>
+		
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="false" />
+		</cover>
+		<page>
+			<entry title="首页" do="pages/index/index" state="" direct="false" />
+		</page>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[DROP TABLE IF EXISTS `ims_slwl_fitment_act_news`;
+CREATE TABLE `ims_slwl_fitment_act_news` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `displayorder` int(11) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `termid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `subtitle` varchar(500) DEFAULT '',
+  `thumb` varchar(500) DEFAULT '',
+  `detail` text,
+  `createtime` int(11) DEFAULT NULL,
+  `out_thumb` varchar(255) DEFAULT '',
+  `out_link` varchar(255) DEFAULT '',
+  `enabled` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_act_term`;
+CREATE TABLE `ims_slwl_fitment_act_term` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `termname` varchar(255) DEFAULT '',
+  `term_style` tinyint(4) DEFAULT '0',
+  `thumb` varchar(255) DEFAULT '',
+  `click_type` tinyint(4) DEFAULT '1',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '1',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_act_term_adv`;
+CREATE TABLE `ims_slwl_fitment_act_term_adv` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `page_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_adact`;
+CREATE TABLE `ims_slwl_fitment_adact` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `subtitle` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `detail` text,
+  `enabled` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `out_thumb` varchar(255) DEFAULT '',
+  `out_link` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_adgroup`;
+CREATE TABLE `ims_slwl_fitment_adgroup` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `setting_name` varchar(100) DEFAULT '',
+  `setting_value` longtext,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_adsp`;
+CREATE TABLE `ims_slwl_fitment_adsp` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `page_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_adv`;
+CREATE TABLE `ims_slwl_fitment_adv` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `advname` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `page_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_booking`;
+CREATE TABLE `ims_slwl_fitment_booking` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `user` bigint(20) DEFAULT '0',
+  `name` varchar(100) DEFAULT '',
+  `tel` varchar(100) DEFAULT '',
+  `option1` text,
+  `option2` text,
+  `money` int(11) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '0',
+  `mark` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_buttons`;
+CREATE TABLE `ims_slwl_fitment_buttons` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `setting_name` varchar(100) DEFAULT '',
+  `setting_value` longtext,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_calc_booking`;
+CREATE TABLE `ims_slwl_fitment_calc_booking` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `user` bigint(20) DEFAULT '0',
+  `name` varchar(100) DEFAULT '',
+  `tel` varchar(100) DEFAULT '',
+  `option1` text,
+  `option2` text,
+  `money` int(11) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '0',
+  `mark` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_calc_settings`;
+CREATE TABLE `ims_slwl_fitment_calc_settings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `setting_name` varchar(100) DEFAULT '',
+  `setting_value` longtext,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_designer`;
+CREATE TABLE `ims_slwl_fitment_designer` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `honour` varchar(255) DEFAULT '',
+  `mobile` varchar(50) DEFAULT '',
+  `attr_1` varchar(255) DEFAULT '',
+  `attr_2` varchar(255) DEFAULT '',
+  `attr_3` varchar(255) DEFAULT '',
+  `attr_4` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `mobile_status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_fav`;
+CREATE TABLE `ims_slwl_fitment_fav` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `user` bigint(20) DEFAULT '0',
+  `pic_type` tinyint(4) DEFAULT '0',
+  `pic_id` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `id_resource` int(11) DEFAULT '0',
+  `type_resource` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_form_banner`;
+CREATE TABLE `ims_slwl_fitment_form_banner` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `case_id` int(11) DEFAULT NULL,
+  `img` varchar(255) DEFAULT '',
+  `url` varchar(255) DEFAULT '',
+  `sort` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_form_wanneng`;
+CREATE TABLE `ims_slwl_fitment_form_wanneng` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `case_id` int(11) DEFAULT NULL,
+  `case_name` varchar(255) DEFAULT NULL,
+  `options` text,
+  `ver` varchar(255) DEFAULT '',
+  `mark` text,
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `uptime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_formid`;
+CREATE TABLE `ims_slwl_fitment_formid` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT '0',
+  `openid` varchar(100) DEFAULT '',
+  `unionid` varchar(100) DEFAULT '',
+  `form_id` varchar(255) DEFAULT '',
+  `op_code` varchar(100) DEFAULT '',
+  `op_text` varchar(255) DEFAULT '',
+  `status` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_giftbig`;
+CREATE TABLE `ims_slwl_fitment_giftbig` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `uid` int(11) DEFAULT '0',
+  `name` varchar(100) DEFAULT '',
+  `mobile` varchar(100) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `mark` varchar(200) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_guestbook`;
+CREATE TABLE `ims_slwl_fitment_guestbook` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT '',
+  `contact` varchar(100) DEFAULT '',
+  `msg` varchar(1000) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_menus`;
+CREATE TABLE `ims_slwl_fitment_menus` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `setting_name` varchar(100) DEFAULT '',
+  `setting_value` longtext,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mod_wxapp`;
+CREATE TABLE `ims_slwl_fitment_mod_wxapp` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `page_url` varchar(255) DEFAULT '',
+  `appid` varchar(255) DEFAULT '',
+  `page_page` varchar(255) DEFAULT '',
+  `enabled` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_news`;
+CREATE TABLE `ims_slwl_fitment_news` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `parentid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `subtitle` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `detail` text,
+  `enabled` int(11) DEFAULT '0',
+  `createtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `out_thumb` varchar(255) DEFAULT '',
+  `out_link` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_omnipotent_data`;
+CREATE TABLE `ims_slwl_fitment_omnipotent_data` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT '',
+  `data` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_omnipotent_form`;
+CREATE TABLE `ims_slwl_fitment_omnipotent_form` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `lable` varchar(255) NOT NULL,
+  `placeholder` varchar(255) DEFAULT '',
+  `choice` smallint(1) DEFAULT NULL,
+  `omnipotent` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_omnipotent_forms`;
+CREATE TABLE `ims_slwl_fitment_omnipotent_forms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `omnipotent_form_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `checked` varchar(6) DEFAULT 'false',
+  `startdate` time DEFAULT NULL,
+  `enddate` time DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_oplogs`;
+CREATE TABLE `ims_slwl_fitment_oplogs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `op_domain` varchar(255) DEFAULT '',
+  `op_user` varchar(255) DEFAULT '',
+  `op_type` varchar(255) DEFAULT '',
+  `op_txt` text,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_order`;
+CREATE TABLE `ims_slwl_fitment_order` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL,
+  `user` int(11) NOT NULL,
+  `ordersn` varchar(50) NOT NULL DEFAULT '',
+  `good_id` int(11) NOT NULL,
+  `money` bigint(20) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `mark` varchar(300) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_panorama`;
+CREATE TABLE `ims_slwl_fitment_panorama` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `displayorder` tinyint(4) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `pic_top` varchar(255) DEFAULT '',
+  `pic_bottom` varchar(255) DEFAULT '',
+  `pic_left` varchar(255) DEFAULT '',
+  `pic_right` varchar(255) DEFAULT '',
+  `pic_front` varchar(255) DEFAULT '',
+  `pic_back` varchar(255) DEFAULT '',
+  `view_count` bigint(20) DEFAULT '0',
+  `fav_count` bigint(20) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_pic_multi`;
+CREATE TABLE `ims_slwl_fitment_pic_multi` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `options` text,
+  `smeta` text,
+  `search_tag` varchar(5000) DEFAULT '',
+  `show_num` bigint(20) DEFAULT '0',
+  `fav_num` bigint(20) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `createtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `desid` int(11) DEFAULT '0',
+  `pic_width` varchar(255) DEFAULT '0',
+  `pic_height` varchar(255) DEFAULT '0',
+  `picsn` varchar(255) DEFAULT '',
+  `qrcode` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_pic_multi_option`;
+CREATE TABLE `ims_slwl_fitment_pic_multi_option` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `parentid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `case` int(11) DEFAULT '0',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=119 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_pic_sole`;
+CREATE TABLE `ims_slwl_fitment_pic_sole` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `options` text,
+  `search_tag` varchar(5000) DEFAULT '',
+  `show_num` bigint(20) DEFAULT '0',
+  `fav_num` bigint(20) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `createtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `desid` int(11) DEFAULT '0',
+  `pic_width` varchar(255) DEFAULT '0',
+  `pic_height` varchar(255) DEFAULT '0',
+  `picsn` varchar(255) DEFAULT '',
+  `qrcode` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_pic_sole_option`;
+CREATE TABLE `ims_slwl_fitment_pic_sole_option` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `parentid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `case` int(11) DEFAULT '0',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_product_list`;
+CREATE TABLE `ims_slwl_fitment_product_list` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` tinyint(4) DEFAULT '0',
+  `title` varchar(200) DEFAULT '',
+  `subtitle` varchar(200) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `detail` text,
+  `view_count` bigint(20) DEFAULT '0',
+  `fav_count` bigint(20) DEFAULT '0',
+  `out_thumb` varchar(255) DEFAULT '',
+  `out_link` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `createtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_reserve`;
+CREATE TABLE `ims_slwl_fitment_reserve` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `uid` bigint(20) DEFAULT '0',
+  `name` varchar(100) DEFAULT '',
+  `tel` varchar(100) DEFAULT '',
+  `msg` varchar(255) DEFAULT '',
+  `retime` datetime DEFAULT '2000-01-01 00:00:00',
+  `money` int(11) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '0',
+  `mark` varchar(500) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_settings`;
+CREATE TABLE `ims_slwl_fitment_settings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `setting_name` varchar(100) DEFAULT '',
+  `setting_value` longtext,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `data_ver` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_list`;
+CREATE TABLE `ims_slwl_fitment_site_list` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `site_id` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `project_code` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `visible` tinyint(4) DEFAULT '0',
+  `coordinate` varchar(255) DEFAULT '',
+  `address` varchar(255) DEFAULT '',
+  `view_count` bigint(20) DEFAULT '0',
+  `fav_count` bigint(20) DEFAULT '0',
+  `options` text,
+  `budget` int(11) DEFAULT '0',
+  `house_type` text,
+  `area` int(11) DEFAULT '0',
+  `other_attr` text,
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_list_dy`;
+CREATE TABLE `ims_slwl_fitment_site_list_dy` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `site_id` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `intro` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `thumbs` text,
+  `content` text,
+  `id_progress` int(11) DEFAULT '0',
+  `id_title` varchar(255) DEFAULT '',
+  `enabled` tinyint(1) DEFAULT '1',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_manage`;
+CREATE TABLE `ims_slwl_fitment_site_manage` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `isrecommand` tinyint(4) DEFAULT '0',
+  `coordinate` varchar(255) DEFAULT '',
+  `province` varchar(100) DEFAULT '',
+  `city` varchar(100) DEFAULT '',
+  `district` varchar(100) DEFAULT '',
+  `address` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_mode`;
+CREATE TABLE `ims_slwl_fitment_site_mode` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_progress`;
+CREATE TABLE `ims_slwl_fitment_site_progress` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_style`;
+CREATE TABLE `ims_slwl_fitment_site_style` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_type`;
+CREATE TABLE `ims_slwl_fitment_site_type` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `create_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_site_user`;
+CREATE TABLE `ims_slwl_fitment_site_user` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `site_id` bigint(20) DEFAULT NULL,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_address`;
+CREATE TABLE `ims_slwl_fitment_store_address` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `uid` int(11) DEFAULT '0',
+  `realname` varchar(100) DEFAULT '',
+  `mobile` varchar(50) DEFAULT '',
+  `province` varchar(50) DEFAULT '',
+  `city` varchar(50) DEFAULT '',
+  `area` varchar(50) DEFAULT '',
+  `address` varchar(300) DEFAULT '',
+  `isdefault` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_adsp`;
+CREATE TABLE `ims_slwl_fitment_store_adsp` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `page_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_adv`;
+CREATE TABLE `ims_slwl_fitment_store_adv` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `page_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_brand`;
+CREATE TABLE `ims_slwl_fitment_store_brand` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `thumb_brand` varchar(255) DEFAULT '',
+  `intro` varchar(1000) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_cart`;
+CREATE TABLE `ims_slwl_fitment_store_cart` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `from_user` varchar(50) DEFAULT NULL,
+  `goodsid` int(11) DEFAULT NULL,
+  `goodstype` tinyint(1) DEFAULT '1',
+  `count` int(11) DEFAULT '1',
+  `price` int(11) DEFAULT '0',
+  `option_id` int(11) DEFAULT '0',
+  `option` text,
+  `checked` tinyint(4) DEFAULT '1',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `idx_openid` (`from_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_category`;
+CREATE TABLE `ims_slwl_fitment_store_category` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` tinyint(4) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `parentid` int(11) DEFAULT '0',
+  `isrecommand` int(11) DEFAULT '0',
+  `adthumb` varchar(255) DEFAULT '',
+  `intro` varchar(500) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '1',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_collect`;
+CREATE TABLE `ims_slwl_fitment_store_collect` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `from_user` varchar(50) DEFAULT NULL,
+  `goodsid` int(11) DEFAULT '0',
+  `smeta` text,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_goods`;
+CREATE TABLE `ims_slwl_fitment_store_goods` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT '1',
+  `displayorder` int(11) DEFAULT '0',
+  `brandid` int(11) DEFAULT '0',
+  `pcate` int(11) DEFAULT '0',
+  `ccate` int(11) DEFAULT '0',
+  `title` varchar(100) DEFAULT '',
+  `intro` varchar(100) DEFAULT '',
+  `thumbs` text,
+  `thumb` varchar(255) DEFAULT '',
+  `unit` varchar(30) DEFAULT '',
+  `goodsn` varchar(255) DEFAULT '',
+  `barcode` varchar(255) DEFAULT '',
+  `content` text,
+  `price` int(11) DEFAULT '0',
+  `original_price` int(11) DEFAULT '0',
+  `inventory` int(11) DEFAULT '0',
+  `inventory_status` tinyint(4) DEFAULT '0',
+  `sales` int(11) DEFAULT '0',
+  `param` text,
+  `spec` text,
+  `spec_status` tinyint(11) DEFAULT '0',
+  `isnew` int(11) DEFAULT '0',
+  `ishot` int(11) DEFAULT '0',
+  `isrecommand` int(11) DEFAULT '0',
+  `istime` int(11) DEFAULT '0',
+  `timestart` datetime DEFAULT '2000-01-01 00:00:00',
+  `timeend` datetime DEFAULT '2000-01-01 00:00:00',
+  `viewcount` bigint(20) DEFAULT '0',
+  `deleted` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_goods_option`;
+CREATE TABLE `ims_slwl_fitment_store_goods_option` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `goodid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `assemble` varchar(255) DEFAULT '',
+  `assemble_json` text,
+  `price` int(11) DEFAULT '0',
+  `original_price` int(11) DEFAULT '0',
+  `inventory` int(11) DEFAULT '0',
+  `goodsn` varchar(255) DEFAULT '',
+  `barcode` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `indx_goodsid` (`goodid`),
+  KEY `indx_displayorder` (`displayorder`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_order`;
+CREATE TABLE `ims_slwl_fitment_store_order` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `from_user` int(11) DEFAULT NULL,
+  `ordersn` varchar(100) DEFAULT '',
+  `price` varchar(10) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  `paytype` tinyint(4) DEFAULT '0',
+  `address` text,
+  `goods` text,
+  `coupon` text,
+  `discount_money` int(11) DEFAULT '0',
+  `goods_first_id` int(11) DEFAULT '0',
+  `goods_first_price` int(11) DEFAULT '0',
+  `total` int(11) DEFAULT '0',
+  `mark` varchar(500) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_order_goods`;
+CREATE TABLE `ims_slwl_fitment_store_order_goods` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) DEFAULT NULL,
+  `brandid` int(11) DEFAULT '0',
+  `orderid` int(11) DEFAULT '0',
+  `goodsid` int(11) DEFAULT '0',
+  `price` int(11) DEFAULT '0',
+  `total` int(11) DEFAULT '0',
+  `option_id` int(11) DEFAULT '0',
+  `option` text,
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_printers`;
+CREATE TABLE `ims_slwl_fitment_store_printers` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `printer_name_cn` varchar(100) DEFAULT '',
+  `printer_name` varchar(100) DEFAULT '',
+  `printer_value` longtext,
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_sale`;
+CREATE TABLE `ims_slwl_fitment_store_sale` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `intro` varchar(500) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enough` int(11) DEFAULT '0',
+  `timelimit` tinyint(4) DEFAULT '0',
+  `timedays1` varchar(255) DEFAULT '',
+  `timedays2` varchar(255) DEFAULT '',
+  `backtype` tinyint(4) DEFAULT '0',
+  `backmoney` int(11) DEFAULT '0',
+  `discount` int(11) DEFAULT '0',
+  `flbackmoney` int(11) DEFAULT NULL,
+  `backwhen` tinyint(4) DEFAULT '0',
+  `total` int(11) DEFAULT '0',
+  `receive` int(11) DEFAULT '0',
+  `enabled` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_store_sale_user`;
+CREATE TABLE `ims_slwl_fitment_store_sale_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `user` int(11) DEFAULT '0',
+  `saleid` int(11) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
+  `option_value` text,
+  `time_start` datetime DEFAULT '2000-01-01 00:00:00',
+  `time_end` datetime DEFAULT '2000-01-01 00:00:00',
+  `status` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_style`;
+CREATE TABLE `ims_slwl_fitment_style` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT '',
+  `contact` varchar(100) DEFAULT '',
+  `mark` varchar(1000) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_term`;
+CREATE TABLE `ims_slwl_fitment_term` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `parentid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_term_des`;
+CREATE TABLE `ims_slwl_fitment_term_des` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT '0',
+  `parentid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `thumb` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '0',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_tipswx`;
+CREATE TABLE `ims_slwl_fitment_tipswx` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `template_base_id` varchar(255) DEFAULT '',
+  `template_base_title` varchar(255) DEFAULT '',
+  `template_id` varchar(255) DEFAULT '',
+  `template_type` tinyint(4) DEFAULT '0',
+  `mark` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_users`;
+CREATE TABLE `ims_slwl_fitment_users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `openid` varchar(255) DEFAULT '',
+  `unionid` varchar(255) DEFAULT '',
+  `nicename` varchar(255) DEFAULT '',
+  `avatar` varchar(255) DEFAULT '',
+  `city` varchar(255) DEFAULT '',
+  `gender` tinyint(4) DEFAULT '0',
+  `province` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  `data_ver` tinyint(4) DEFAULT '0',
+  `mobile` varchar(100) DEFAULT '',
+  `last_adpop` datetime DEFAULT '2000-01-01 00:00:00',
+  `type_app` varchar(255) DEFAULT 'wechat',
+  `password` varchar(255) DEFAULT '',
+  `country` varchar(255) DEFAULT NULL,
+  `last_time` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=537 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_wn_case`;
+CREATE TABLE `ims_slwl_fitment_wn_case` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `sort` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `label_show` int(1) DEFAULT '0',
+  `detail` text,
+  `bg` tinyint(4) DEFAULT '2',
+  `imbg` varchar(255) DEFAULT '',
+  `base_url` varchar(255) DEFAULT '',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_slwl_fitment_wn_list`;
+CREATE TABLE `ims_slwl_fitment_wn_list` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `sort` int(11) DEFAULT '0',
+  `case_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT '',
+  `label` varchar(255) DEFAULT '',
+  `placeholder` varchar(255) DEFAULT '',
+  `options` varchar(255) DEFAULT '',
+  `enabled` tinyint(4) DEFAULT '1',
+  `addtime` datetime DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>

@@ -1,0 +1,65 @@
+
+// $list_multi_rs = array();
+// foreach ($list_multi as $k => $v) {
+//     if ($v['parentid']=='0') {
+//         $list_multi_rs[$k] = $v;
+
+//         foreach ($list_multi as $key => $value) {
+//             if ($value['parentid'] == $v['id']) {
+//                 $list_multi_rs[$k]['child'][] = $value;
+//             }
+//         }
+//     }
+// }
+
+// $list_single_rs = array();
+// foreach ($list_multi as $k => $v) {
+//     if ($v['parentid']=='0') {
+//         $list_single_rs[$k] = $v;
+
+//         foreach ($list_multi as $key => $value) {
+//             if ($value['parentid'] == $v['id']) {
+//                 $list_single_rs[$k][] = $value;
+//             }
+//         }
+//     }
+// }
+
+
+
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_act_news`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_act_term`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_adact`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_adgroup`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_adsp`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_adv`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_booking`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_buttons`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_coupon`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_designer`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_fav`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_giftbig`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_guestbook`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_menus`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_news`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_order`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_case`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_case_option`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_mucolor`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_mucolor_option`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_multi`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_multi_option`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_sole`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_sole_option`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_video`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_pic_video_option`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_reserve`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_settings`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_style`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_term`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_term_des`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_tipswx`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_users`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_wdcach`;
+DROP TABLE IF EXISTS `ims_slwl_fitment_mig_wx_session`;
+

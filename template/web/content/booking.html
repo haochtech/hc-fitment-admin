@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li {if $operation == 'display'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('',['do'=>'content/booking'])}">{$_W['slwl']['lang']['booking_title_tab']}</a>
+                    </li>
+                    {if $one['id'] && $operation == 'post'}
+                    <li class="layui-this">
+                        <a href="{php echo webUrl('',['do'=>'content/booking','op'=>'post','id'=>$one['id']])}">{$_W['slwl']['lang']['edit']}</a>
+                    </li>
+                    {/if}
+                    <li {if $operation == 'export'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('',['do'=>'content/booking','op'=>'export'])}">{$_W['slwl']['lang']['export_record']}</a>
+                    </li>
+                </ul>
+            </div>
+
+        {if $operation == 'display'}
+            <div class="box-tools">
+                <div class="box-search">
+                    <form action="{php echo webUrl('',['do'=>'content/booking'])}" method="post">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" value="{$keyword}" class="layui-input"
+                                placeholder="{$_W['slwl']['lang']['booking_search_field']}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="">{$_W['slwl']['lang']['search']}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{$_W['slwl']['lang']['nickname']}</th>
+                            <th>{$_W['slwl']['lang']['contact_way']}</th>
+                            <th>{$_W['slwl']['lang']['content']}</th>
+                            <th>{$_W['slwl']['lang']['status']}</th>
+                            <th>{$_W['slwl']['lang']['time']}</th>
+                            <th>{$_W['slwl']['lang']['mark']}</th>
+                            <th>{$_W['slwl']['lang']['operation']}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $this_statuses = array('0'=>$_W['slwl']['lang']['unprocessed'],'1'=>$_W['slwl']['lang']['processed']); }
+                        {loop $list $item}
+                        <tr>
+                            <td class="wmin20">{$item['id']}</td>
+                            <td class="td-content">{$item['name']}</td>
+                            <td>{$item['tel']}</td>
+                            <td>{$item['sp1']} {$item['option2']}</td>
+                            <td>{$this_statuses[$item['status']]}</td>
+                            <td>{$item['addtime']}</td>
+                            <td>{$item['mark']}</td>
+                            <td class="td-button">
+                                <a href="{php echo webUrl('',['do'=>'content/booking','op'=>'post','id'=>$item['id']])}"
+                                    class="layui-btn"
+                                    title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$item['id']}"
+                                    title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+                            </td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use(['laypage', 'layer'], function(){
+                    var laypage = layui.laypage;
+                    var layer = layui.layer;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo webUrl('',['do'=>'content/booking'])}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+
+                    // 删除
+                    $(document).on('click', '.btn-del', function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo webUrl('',['do'=>'content/booking','op'=>'delete'])}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.code == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.msg, {
+                                            offset: '20%',
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        offset: '20%',
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'post'}
+            <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <!-- 昵称 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['nickname']}</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$one['name']}" class="layui-input">
+                    </div>
+                </div>
+                <!-- 备注 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['mark']}</label>
+                    <div class="layui-input-block">
+                        <textarea name="mark" placeholder="备注" class="layui-textarea">{$one['mark']}</textarea>
+                    </div>
+                </div>
+                <!-- 状态 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="{$_W['slwl']['lang']['processed']}"
+                            {if $one['status']==1 }checked{/if}>
+                        <input type="radio" name="status" value="0" title="{$_W['slwl']['lang']['unprocessed']}"
+                            {if $one['status']==0 }checked{/if}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="booking">{$_W['slwl']['lang']['submit']}</button>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(booking)', function(data){
+                        let url = "{php echo webUrl('',['do'=>'content/booking','op'=>'post'])}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.code);
+                                    if (rs.code == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('',['do'=>'content/booking'])}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.msg, {
+                                            offset: '20%',
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        offset: '20%',
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+        {elseif $operation == 'export'}
+            <form class="layui-form" method="post" action="{php echo webUrl('',['do'=>'content/booking','op'=>'export_post'])}">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <!-- 说明 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['tips']}</label>
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['booking_tips_content']}</div>
+                    </div>
+                </div>
+                <!-- 时间段 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['booking_time_quantum']}</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="timestart" placeholder="yyyy-MM-dd" class="layui-input" id="timestart" lay-verify="required">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="timeend" placeholder="yyyy-MM-dd" class="layui-input" id="timeend" lay-verify="required">
+                    </div>
+                    <!-- <div class="layui-input-block">
+                        <input type="text" name="createtime" class="layui-input" id="timestart" placeholder="yyyy-MM-dd HH:mm:ss">
+                    </div> -->
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="booking">{$_W['slwl']['lang']['export']}</button>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('laydate', function(){
+                    var laydate = layui.laydate;
+
+                    laydate.render({
+                        elem: '#timestart'
+                        ,type: 'date'
+                        ,format: 'yyyy-MM-dd'
+                        ,value: "{php echo $timestart;}"
+                    });
+
+                    laydate.render({
+                        elem: '#timeend'
+                        ,type: 'date'
+                        ,format: 'yyyy-MM-dd'
+                        ,value: "{php echo $timeend;}"
+                    });
+                });
+            </script>
+
+        {/if}
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

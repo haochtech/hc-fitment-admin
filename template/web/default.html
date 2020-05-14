@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <form class="layui-form fixed" action="" method="post" enctype="multipart/form-data" id="data-form">
+                <div class="layui-tab layui-tab-brief" lay-filter="tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">{$_W['slwl']['lang']['default_title']}</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 首页设置 -->
+                        <div class="layui-tab-item layui-show">
+                            <!-- 轮播图 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_adv']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[banner_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                            {if $settings['banner_show']==1 || empty($settings['banner_show']) }checked{/if}>
+                                    <input type="radio" name="options[banner_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                            {if $settings['banner_show']==0 && isset($settings['banner_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 轮播图-高度 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_adv_height']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[banner_height]"
+                                        value="{$settings['banner_height']}"
+                                        placeholder="{$_W['slwl']['lang']['default_adv_height_placeholder']}" />
+                                </div>
+                            </div>
+                            <!-- <div class="layui-form-item">
+                                <label class="layui-form-label">中部导航</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[status_nav]" value="1"
+                                        title="启用" {if $settings['status_nav']==1 || empty($settings['status_nav']) }checked{/if}>
+                                    <input type="radio" name="options[status_nav]" value="0"
+                                        title="隐藏" {if $settings['status_nav']==0 && isset($settings['status_nav']) }checked{/if}>
+                                </div>
+                            </div> -->
+                            <!-- 组合广告 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_adgroup']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[adgroup_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['adgroup_show']==1 || empty($settings['adgroup_show']) }checked{/if}>
+                                    <input type="radio" name="options[adgroup_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['adgroup_show']==0 && isset($settings['adgroup_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 首页广告 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_adsp']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[adsp_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['adsp_show']==1 || empty($settings['adsp_show']) }checked{/if}>
+                                    <input type="radio" name="options[adsp_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['adsp_show']==0 && isset($settings['adsp_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 设计师展示 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_designe_display']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[titledf3_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['titledf3_show']==1 || empty($settings['titledf3_show']) }checked{/if}>
+                                    <input type="radio" name="options[titledf3_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['titledf3_show']==0 && isset($settings['titledf3_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 设计师展示标题 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_designe_display_title']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[titledf3]"
+                                        value="{$settings['titledf3']}"
+                                        placeholder="{$_W['slwl']['lang']['default_designe_display_title_placeholder']}" />
+                                </div>
+                            </div>
+                            <!-- 装修效果图 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_fitment_effect_pic']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[titledf1_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['titledf1_show']==1 || empty($settings['titledf1_show']) }checked{/if}>
+                                    <input type="radio" name="options[titledf1_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['titledf1_show']==0 && isset($settings['titledf1_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 装修效果图标题 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_fitment_effect_pic_title']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[titledf1]"
+                                        value="{$settings['titledf1']}"
+                                        placeholder="{$_W['slwl']['lang']['default_fitment_effect_pic_title_placeholder']}" />
+                                </div>
+                            </div>
+                            <!-- 装修攻略 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_fitment_manual']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[titledf2_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['titledf2_show']==1 || empty($settings['titledf2_show']) }checked{/if}>
+                                    <input type="radio" name="options[titledf2_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['titledf2_show']==0 && isset($settings['titledf2_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 装修攻略标题 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_fitment_manual_title']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[titledf2]"
+                                        value="{$settings['titledf2']}"
+                                        placeholder="{$_W['slwl']['lang']['default_fitment_manual_title_placeholder']}" />
+                                </div>
+                            </div>
+                            <!-- 普通文章样式一 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_act_style_1']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[actnews1_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['actnews1_show']==1 || empty($settings['actnews1_show']) }checked{/if}>
+                                    <input type="radio" name="options[actnews1_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['actnews1_show']==0 && isset($settings['actnews1_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 普通文章样式二 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_act_style_2']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[actnews2_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['actnews2_show']==1 || empty($settings['actnews2_show']) }checked{/if}>
+                                    <input type="radio" name="options[actnews2_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['actnews2_show']==0 && isset($settings['actnews2_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 普通文章样式二-标题 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_act_style_2_title']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[title_actnews2]"
+                                        value="{$settings['title_actnews2']}"
+                                        placeholder="{$_W['slwl']['lang']['default_act_style_2_title_placeholder']}" />
+                                </div>
+                            </div>
+                            <!-- 普通文章二样式 -->
+                            <div class="layui-form-item style">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_act_list_style']}</label>
+                                <div class="layui-input-block flex">
+                                    <input type="hidden" name="options[term_style]"
+                                        value="{php echo isset($settings['term_style'])?$settings['term_style']:'0'}"  id="style-value">
+                                    <div class="one-style {if empty($settings['term_style']) || $settings['term_style']=='0'}active{/if}" data-val="0">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/0.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_1']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_1']}">
+                                        </div>
+                                    </div>
+                                    <div class="one-style {if $settings['term_style']=='1'}active{/if}" data-val="1">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/1.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_2']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_2']}">
+                                        </div>
+                                    </div>
+                                    <div class="one-style {if $settings['term_style']=='2'}active{/if}" data-val="2">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/2.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_3']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_3']}">
+                                        </div>
+                                    </div>
+                                    <div class="one-style {if $settings['term_style']=='3'}active{/if}" data-val="3">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/3.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_4']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_4']}">
+                                        </div>
+                                    </div>
+                                    <div class="one-style {if $settings['term_style']=='4'}active{/if}" data-val="4">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/4.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_5']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_5']}">
+                                        </div>
+                                    </div>
+                                    <div class="one-style {if $settings['term_style']=='5'}active{/if}" data-val="5">
+                                        <div class="img">
+                                            <img src="{MODULE_URL}template/public/images/term/5.png"
+                                            title="{$_W['slwl']['lang']['default_act_list_style_6']}"
+                                            alt="{$_W['slwl']['lang']['default_act_list_style_6']}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 工地模块 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['default_site']}</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="options[site_show]" value="1"
+                                        title="{$_W['slwl']['lang']['show']}"
+                                        {if $settings['site_show']==1 || empty($settings['site_show']) }checked{/if}>
+                                    <input type="radio" name="options[site_show]" value="0"
+                                        title="{$_W['slwl']['lang']['hide']}"
+                                        {if $settings['site_show']==0 && isset($settings['site_show']) }checked{/if}>
+                                </div>
+                            </div>
+                            <!-- 更多 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{$_W['slwl']['lang']['more']}</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" name="options[titlemore]"
+                                        value="{$settings['titlemore']}" placeholder="{$_W['slwl']['lang']['more_placeholder']}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-content fixed" id="data-submit">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="default">{$_W['slwl']['lang']['submit']}</button>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(default)', function(data){
+                        let url = "{php echo webUrl('default')}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('default')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+
+                    $(document).on('click', '.layui-form-item.style .one-style', function () {
+                       $('#style-value').val($(this).attr('data-val'));
+                       $(this).siblings('.active').removeClass('active');
+                       $(this).addClass('active');
+                   })
+                });
+            </script>
+
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>

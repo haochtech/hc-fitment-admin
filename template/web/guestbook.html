@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$_W['slwl']['lang']['sys_name']}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    {template 'public/header'}
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    {template 'public/top'}
+    {template 'public/left'}
+
+    <div class="layui-body">
+        <div class="layui-main">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li {if $operation == 'display'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('guestbook',array('op' =>'display'))}">{$_W['slwl']['lang']['guestbook_title_tab']}</a>
+                    </li>
+                    <li {if $operation == 'set'} class="layui-this" {/if}>
+                        <a href="{php echo webUrl('guestbook',array('op' =>'set'))}">{$_W['slwl']['lang']['setting']}</a>
+                    </li>
+                    {if $one['id'] && $operation == 'post'}
+                        <li class="layui-this">
+                            <a href="{php echo webUrl('guestbook',array('op' =>'post','id'=>$one['id']))}">{$_W['slwl']['lang']['edit']}</a>
+                        </li>
+                    {/if}
+                </ul>
+            </div>
+
+        {if $operation == 'display'}
+            <div class="box-tools">
+                <div class="box-search">
+                    <form action="{php echo webUrl('guestbook')}" method="post">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" value="{$keyword}" class="layui-input"
+                                placeholder="{$_W['slwl']['lang']['guestbook_search_field']}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="">{$_W['slwl']['lang']['search']}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{$_W['slwl']['lang']['name']}</th>
+                            <th>{$_W['slwl']['lang']['contact_way']}</th>
+                            <th>{$_W['slwl']['lang']['content']}</th>
+                            <th>{$_W['slwl']['lang']['status']}</th>
+                            <th>{$_W['slwl']['lang']['operation']}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {php $this_statuses = array('0'=>$_W['slwl']['lang']['unprocessed'],'1'=>$_W['slwl']['lang']['processed']); }
+                        {loop $list $guestbook}
+                        <tr>
+                            <td class="wmin20">{$guestbook['id']}</td>
+                            <td class="td-content">{$guestbook['name']}</td>
+                            <td class="td-content">{$guestbook['contact']}</td>
+                            <td>{$guestbook['msg']}</td>
+                            <td>{$this_statuses[$guestbook['status']]}</td>
+                            <td class="td-button">
+                                <a href="{php echo webUrl('guestbook', array('op' => 'post', 'id' => $guestbook['id']))}"
+                                    class="layui-btn layui-btn-normal"
+                                    title="{$_W['slwl']['lang']['edit']}">{$_W['slwl']['lang']['edit']}</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-danger btn-del" data-id="{$guestbook['id']}"
+                                    title="{$_W['slwl']['lang']['delete']}">{$_W['slwl']['lang']['delete']}</a>
+                            </td>
+                        </tr>
+                        {/loop}
+                    </tbody>
+                </table>
+                <div class="pager">
+                    {$pager}
+                </div>
+            </div>
+
+            <script>
+                layui.use(['layer', 'laypage'], function(){
+                    var layer = layui.layer;
+                    var laypage = layui.laypage;
+
+                    // 分页
+                    laypage.render({
+                        elem: $('.pager')
+                        ,limit: '{php echo $psize; }'
+                        ,count: '{php echo $total; }'
+                        ,theme: '#1E9FFF'
+                        ,curr:  '{php echo $pindex; }'
+                        ,hash: '{php echo $pindex; }'
+                        ,jump: function (obj, first) {
+                            if (first != true) {
+                                var currentPage = obj.curr; //获取点击的页码
+                                window.location.href = "{php echo webUrl('guestbook')}&page=" + currentPage;
+                            }
+                        }
+                    });
+                    $('.pager').show();
+
+                    // 删除
+                    $(document).on('click', '.btn-del', function () {
+                        $obj = $(this);
+                        $del_id = $obj.data('id');
+                        layer.confirm("{$_W['slwl']['lang']['tips_delete_ok']}", {
+                            offset: '20%',
+                            btn: ["{$_W['slwl']['lang']['tips_think_again']}", "{$_W['slwl']['lang']['delete']}"],
+                            scrollbar: false,
+                            closeBtn: 0,
+                        }, function (i) {
+                           layer.close(i);
+                        }, function (i) {
+                            let $url = "{php echo webUrl('guestbook', array('op'=>'delete'))}";
+
+                            $.ajax({
+                                type: "POST",
+                                url: $url,
+                                dataType: 'json',
+                                data: {
+                                    id: $del_id
+                                },
+                                success: function (rs) {
+                                    console.log(rs);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg('删除成功', {
+                                            time: 500
+                                        },
+                                        function () {
+                                            $obj.closest('tr').fadeOut(200, function () {
+                                                $obj.remove();
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                        $obj.removeClass('lock');
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        });
+                    });
+                });
+                $(function () {
+
+                });
+            </script>
+
+
+        {elseif $operation == 'set'}
+            <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+                <!-- 顶部图片 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['guestbook_top_pic']}</label>
+                    <div class="layui-input-block">
+                        {php echo slwl_tpl_form_field_image('options[thumb_post]', $settings['thumb_post']);}
+                        <div class="layui-form-mid layui-word-aux">{$_W['slwl']['lang']['guestbook_top_pic_tips']}</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="set">{$_W['slwl']['lang']['submit']}</button>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(set)', function(data){
+                        let url = "{php echo webUrl('guestbook', array('op'=>'set'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('guestbook', array('op'=>'set'))}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+
+
+        {elseif $operation == 'post'}
+            <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{$one['id']}" />
+                <!-- 状态 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['status']}</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="{$_W['slwl']['lang']['enabled']}"
+                            {if $one['status']==1 || empty($one['id']) }checked{/if}>
+                        <input type="radio" name="status" value="0" title="{$_W['slwl']['lang']['disabled']}"
+                            {if $one['status']==0 && $one['id'] }checked{/if}>
+                    </div>
+                </div>
+                <!-- 用户名 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['name']}</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$one['name']}" class="layui-input">
+                    </div>
+                </div>
+                <!-- 联系方式 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['contact_way']}</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="contact" value="{$one['contact']}" class="layui-input">
+                    </div>
+                </div>
+                <!-- 内容 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$_W['slwl']['lang']['content']}</label>
+                    <div class="layui-input-block">
+                        <textarea name="msg" placeholder="{$_W['slwl']['lang']['content']}" class="layui-textarea">{$one['msg']}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="guestbook">{$_W['slwl']['lang']['submit']}</button>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                layui.use('form', function(){
+                    var form = layui.form;
+
+                    form.on('submit(guestbook)', function(data){
+                        let url = "{php echo webUrl('guestbook', array('op'=>'post'))}";
+                        var $obj = $(this);
+
+                        if (!$obj.hasClass('lock')) {
+                            $obj.addClass('lock'); // 不能再点击
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: 'json',
+                                data: data.field,
+                                success: function (rs) {
+                                    console.log(rs.message.errno);
+                                    if (rs.message.errno == '0') {
+                                        layer.msg("{$_W['slwl']['lang']['tips_success']}" , {
+                                            time: 500
+                                        }, function () {
+                                            window.location.href = "{php echo webUrl('guestbook')}";
+                                        });
+                                    } else {
+                                        layer.msg(rs.message.message, {
+                                            shift: 6,
+                                        });
+                                    }
+                                    $obj.removeClass('lock');
+                                },
+                                error: function () {
+                                    layer.msg("{$_W['slwl']['lang']['tips_submit_error']}" , {
+                                        shift: 6,
+                                    });
+                                    $obj.removeClass('lock');
+                                }
+                            });
+                        }
+
+                        return false;
+                    });
+                });
+            </script>
+        {/if}
+        </div>
+    </div>
+
+    {template 'public/copyright'}
+</div>
+
+{template 'public/footer'}
+</body>
+</html>
